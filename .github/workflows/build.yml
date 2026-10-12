@@ -18,7 +18,7 @@ jobs:
 
       - name: Validate JSON data files
         run: |
-          for f in IronLog/Resources/Data/*.json; do
+          for f in IronLog/Resources/Data/*.json Shared/Data/*.json; do
             python3 -m json.tool "$f" > /dev/null || { echo "::error file=$f::Invalid JSON"; exit 1; }
           done
 
@@ -27,7 +27,7 @@ jobs:
           set -o pipefail
           xcodebuild \
             -project IronLog.xcodeproj \
-            -target IronLog \
+            -alltargets \
             -sdk iphonesimulator \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \

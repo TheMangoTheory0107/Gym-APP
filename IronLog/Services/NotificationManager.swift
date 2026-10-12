@@ -43,6 +43,17 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         center.add(UNNotificationRequest(identifier: id, content: content, trigger: trigger))
     }
 
+    /// Schedules a notification every week (weekday 1 = Sunday) at the given time.
+    func scheduleWeekly(id: String, title: String, body: String, weekday: Int, hour: Int, minute: Int) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = .default
+        let trigger = UNCalendarNotificationTrigger(
+            dateMatching: DateComponents(hour: hour, minute: minute, weekday: weekday), repeats: true)
+        center.add(UNNotificationRequest(identifier: id, content: content, trigger: trigger))
+    }
+
     func cancel(id: String) {
         center.removePendingNotificationRequests(withIdentifiers: [id])
         center.removeDeliveredNotifications(withIdentifiers: [id])

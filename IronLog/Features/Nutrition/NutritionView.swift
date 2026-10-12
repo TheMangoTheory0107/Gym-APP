@@ -77,6 +77,7 @@ struct NutritionView: View {
             }
             .screenBackground()
             .scrollDismissesKeyboard(.interactively)
+            .onChange(of: todaysFood.count) { _, _ in WidgetSync.update(context: context) }
             .sheet(item: $review) { r in
                 FoodReviewSheet(items: r.items, meal: r.meal, title: r.title)
             }

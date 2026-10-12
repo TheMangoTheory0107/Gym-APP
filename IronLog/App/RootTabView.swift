@@ -7,6 +7,7 @@ enum AppTab: Hashable {
 
 struct RootTabView: View {
     @Environment(\.modelContext) private var context
+    @Environment(\.scenePhase) private var scenePhase
     @AppStorage(ProfileKey.didSeed) private var didSeed = false
     @State private var tab: AppTab = .today
 
@@ -29,7 +30,14 @@ struct RootTabView: View {
                 .tag(AppTab.progress)
         }
         .onChange(of: tab) { _, _ in Haptics.select() }
-        .task { seedIfNeeded() }
+        .task {
+            seedIfNeeded()
+            WidgetSync.update(context: context)
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .background { WidgetSync.update(context: context) }
+            if phase == .active { RestTimer.shared.refresh() }
+        }
     }
 
     /// First launch only: store the starting weigh-in from the brief.

@@ -1,3 +1,4 @@
+import ActivityKit
 import Observation
 import SwiftUI
 
@@ -12,11 +13,14 @@ final class RestTimer {
     private(set) var totalSeconds = 0
     private(set) var nextUp = ""
     @ObservationIgnored private var task: Task<Void, Never>?
+    @ObservationIgnored private var activity: Activity<RestActivityAttributes>?
+    @ObservationIgnored private var workoutName = ""
 
     var isRunning: Bool { endDate != nil }
 
-    func start(seconds: Int, nextUp: String) {
+    func start(seconds: Int, nextUp: String, workoutName: String = "") {
         self.nextUp = nextUp
+        if !workoutName.isEmpty { self.workoutName = workoutName }
         totalSeconds = seconds
         endDate = Date.now.addingTimeInterval(TimeInterval(seconds))
         reschedule()
@@ -37,6 +41,7 @@ final class RestTimer {
         task = nil
         endDate = nil
         NotificationManager.shared.cancel(id: Self.notificationId)
+        endActivity()
     }
 
     /// Called when the app comes back to the foreground: clear a timer that ended while locked.
@@ -53,6 +58,7 @@ final class RestTimer {
             body: nextUp.isEmpty ? "Time for your next set." : "Next: \(nextUp)",
             after: remaining
         )
+        updateActivity(end: end)
         task?.cancel()
         task = Task { [weak self] in
             try? await Task.sleep(nanoseconds: UInt64(max(remaining, 0) * 1_000_000_000))
@@ -65,7 +71,28 @@ final class RestTimer {
         task?.cancel()
         task = nil
         endDate = nil
+        endActivity()
         if buzz { Haptics.thud(); Haptics.success() }
+    }
+
+    // MARK: Live Activity (Lock Screen + Dynamic Island)
+
+    private func updateActivity(end: Date) {
+        guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
+        let state = RestActivityAttributes.ContentState(endDate: end, totalSeconds: totalSeconds, nextUp: nextUp)
+        let content = ActivityContent(state: state, staleDate: end.addingTimeInterval(30))
+        if let activity {
+            Task { await activity.update(content) }
+        } else {
+            activity = try? Activity.request(attributes: RestActivityAttributes(workoutName: workoutName),
+                                             content: content, pushType: nil)
+        }
+    }
+
+    private func endActivity() {
+        guard let current = activity else { return }
+        activity = nil
+        Task { await current.end(nil, dismissalPolicy: .immediate) }
     }
 }
 

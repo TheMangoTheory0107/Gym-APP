@@ -117,7 +117,7 @@ final class ActiveWorkoutModel {
         // Rest after every set except cardio and the very last set of the workout.
         if ex.logType != .minutes, doneSets < totalSets {
             let seconds = UserDefaults.standard.object(forKey: ProfileKey.restSeconds) as? Int ?? ProfileDefault.restSeconds
-            RestTimer.shared.start(seconds: seconds, nextUp: nextUpLabel())
+            RestTimer.shared.start(seconds: seconds, nextUp: nextUpLabel(), workoutName: session.dayName)
         } else {
             RestTimer.shared.skip()
         }
@@ -144,6 +144,7 @@ final class ActiveWorkoutModel {
         RestTimer.shared.skip()
         session.finishedAt = .now
         try? context.save()
+        WidgetSync.update(context: context)
         Haptics.success()
     }
 

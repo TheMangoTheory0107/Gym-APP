@@ -4,6 +4,8 @@
 <dict>
 	<key>UIUserInterfaceStyle</key>
 	<string>Dark</string>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Iron Log reads your body weight and body fat from Apple Health to keep your progress charts and BMI up to date.</string>
 	<key>NSHealthUpdateUsageDescription</key>

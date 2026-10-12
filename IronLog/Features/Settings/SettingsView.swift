@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
@@ -15,6 +16,12 @@ struct SettingsView: View {
 
     @State private var healthStatus = ""
     @State private var notificationStatus = ""
+    @State private var backupURL: URL?
+    @State private var backupStatus = ""
+    @State private var importing = false
+    @State private var pendingRestore: BackupService.Backup?
+    @AppStorage("backup.weeklyReminder") private var weeklyBackupReminder = false
+    @AppStorage(BackupService.lastBackupKey) private var lastBackup: Double = 0
 
     var body: some View {
         NavigationStack {
@@ -79,6 +86,50 @@ struct SettingsView: View {
                 } header: { header("Notifications") }
 
                 Section {
+                    if let backupURL {
+                        ShareLink(item: backupURL) {
+                            Label("Save backup file…", systemImage: "square.and.arrow.up")
+                        }
+                    } else {
+                        Button {
+                            makeBackup()
+                        } label: {
+                            Label("Export all data", systemImage: "externaldrive.fill")
+                        }
+                    }
+                    Button {
+                        importing = true
+                    } label: {
+                        Label("Import from backup", systemImage: "square.and.arrow.down")
+                    }
+                    Toggle("Weekly backup reminder (Sun 8 PM)", isOn: $weeklyBackupReminder)
+                        .tint(Theme.accent)
+                        .onChange(of: weeklyBackupReminder) { _, on in
+                            Task {
+                                if on { await NotificationManager.shared.requestPermission() }
+                                BackupService.setWeeklyReminder(on)
+                            }
+                        }
+                    if lastBackup > 0 {
+                        Text("Last export: \(Date(timeIntervalSince1970: lastBackup).formatted(date: .abbreviated, time: .shortened))")
+                            .font(.footnote).foregroundStyle(Theme.textSecondary)
+                    }
+                    if !backupStatus.isEmpty {
+                        Text(backupStatus).font(.footnote).foregroundStyle(Theme.textSecondary)
+                    }
+                } header: { header("Backup") } footer: {
+                    Text("Save the file to iCloud Drive or Files. Import replaces everything currently in the app.")
+                }
+
+                Section {
+                    Text("Muscle images: Z-Anatomy (CC BY-SA 4.0), based on BodyParts3D, © The Database Center for Life Science (CC BY-SA 2.1 JP). Rendered for Iron Log.")
+                    Text("Exercise photos: free-exercise-db (public domain).")
+                    Text("Font: Bebas Neue (SIL Open Font License).")
+                } header: { header("Credits") }
+                .font(.footnote)
+                .foregroundStyle(Theme.textSecondary)
+
+                Section {
                     LabeledContent("Version", value: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—")
                     LabeledContent("Exercises loaded", value: "\(Catalog.shared.exercises.count)")
                 } header: { header("About") }
@@ -90,6 +141,46 @@ struct SettingsView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
+            .fileImporter(isPresented: $importing, allowedContentTypes: [.json]) { result in
+                switch result {
+                case .success(let url):
+                    do { pendingRestore = try BackupService.read(url) } catch {
+                        backupStatus = "That file isn't an Iron Log backup (\(error.localizedDescription))."
+                    }
+                case .failure(let error):
+                    backupStatus = error.localizedDescription
+                }
+            }
+            .confirmationDialog(restoreTitle, isPresented: Binding(get: { pendingRestore != nil },
+                                                                    set: { if !$0 { pendingRestore = nil } }),
+                                titleVisibility: .visible) {
+                Button("Replace all data", role: .destructive) {
+                    guard let b = pendingRestore else { return }
+                    do {
+                        try BackupService.restore(b, context: context)
+                        backupStatus = "Restored \(b.sessions.count) workouts, \(b.food.count) food entries, \(b.bodyMetrics.count) weigh-ins."
+                        Haptics.success()
+                    } catch {
+                        backupStatus = "Restore failed: \(error.localizedDescription)"
+                    }
+                    pendingRestore = nil
+                }
+            }
+        }
+    }
+
+    private var restoreTitle: String {
+        guard let b = pendingRestore else { return "" }
+        return "Restore backup from \(b.exportedAt.formatted(date: .abbreviated, time: .shortened))? This replaces everything in the app."
+    }
+
+    private func makeBackup() {
+        do {
+            backupURL = try BackupService.export(context: context)
+            backupStatus = "Backup ready. Tap “Save backup file…” and choose Save to Files."
+            Haptics.success()
+        } catch {
+            backupStatus = "Export failed: \(error.localizedDescription)"
         }
     }
 
