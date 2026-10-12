@@ -1,11 +1,23 @@
+import SwiftData
 import SwiftUI
 
 struct TodayView: View {
     private let catalog = Catalog.shared
     private let todayWeekday = Calendar.current.component(.weekday, from: .now)
 
+    @Environment(\.modelContext) private var context
+    @Query(sort: \WorkoutSession.startedAt, order: .reverse) private var sessions: [WorkoutSession]
+
     @State private var selectedWeekday = Calendar.current.component(.weekday, from: .now)
     @State private var showSettings = false
+    @State private var activeSession: WorkoutSession?
+
+    private var openSession: WorkoutSession? { sessions.first { !$0.isFinished } }
+
+    /// A finished workout for the selected split day, done today.
+    private var doneToday: WorkoutSession? {
+        sessions.first { $0.isFinished && $0.splitWeekday == selectedWeekday && $0.startedAt >= Date.now.startOfDay }
+    }
 
     private var day: SplitDay? { catalog.splitDay(weekday: selectedWeekday) }
 
@@ -21,10 +33,31 @@ struct TodayView: View {
 
                     DaySwitcher(selected: $selectedWeekday, today: todayWeekday)
 
+                    if let open = openSession {
+                        Button {
+                            Haptics.thud()
+                            activeSession = open
+                        } label: {
+                            Label("Resume · \(open.dayName)", systemImage: "play.fill")
+                        }
+                        .buttonStyle(.primary)
+                    }
+
                     if let day, !day.isRest {
+                        if let done = doneToday {
+                            CompletedCard(session: done)
+                        } else if openSession == nil {
+                            Button {
+                                start(day)
+                            } label: {
+                                Label("Start workout", systemImage: "bolt.fill")
+                            }
+                            .buttonStyle(.primary)
+                        }
                         workoutList(day)
                     } else {
                         RestDayCard()
+                        WeeklySummaryCard(sessions: sessions)
                     }
                 }
                 .padding(.horizontal, Theme.gutter)
@@ -46,8 +79,20 @@ struct TodayView: View {
                 }
             }
             .sheet(isPresented: $showSettings) { SettingsView() }
+            .fullScreenCover(item: $activeSession) { session in
+                ActiveWorkoutView(session: session, context: context)
+            }
             .navigationDestination(for: ExerciseDef.self) { ExerciseDetailView(exercise: $0) }
         }
+    }
+
+    private func start(_ day: SplitDay) {
+        Haptics.thud()
+        let session = WorkoutSession(dayName: day.name, splitWeekday: selectedWeekday)
+        context.insert(session)
+        try? context.save()
+        activeSession = session
+        Task { await NotificationManager.shared.requestPermission() }
     }
 
     private var kicker: String {
@@ -184,6 +229,31 @@ private struct RestDayCard: View {
             .foregroundStyle(Theme.textSecondary)
         }
         .cardStyle(padding: 20)
+    }
+}
+
+/// Today's session is already done.
+private struct CompletedCard: View {
+    let session: WorkoutSession
+
+    var body: some View {
+        HStack(spacing: 14) {
+            Image(systemName: "checkmark")
+                .font(.system(size: 22, weight: .heavy))
+                .foregroundStyle(.white)
+                .frame(width: 48, height: 48)
+                .background(Theme.accent, in: Circle())
+            VStack(alignment: .leading, spacing: 2) {
+                Text("SESSION DONE")
+                    .font(.display(24))
+                    .foregroundStyle(Theme.textPrimary)
+                Text("\(session.sets.count) sets · \(Fmt.volume(session.totalVolume)) kg · \(Fmt.duration((session.finishedAt ?? .now).timeIntervalSince(session.startedAt)))")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.textSecondary)
+            }
+            Spacer()
+        }
+        .cardStyle()
     }
 }
 
