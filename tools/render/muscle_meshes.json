@@ -1,0 +1,22 @@
+{
+  "_comment": "Maps the app's muscle ids (muscles.json) to mesh names in the Z-Anatomy MuscularSystem model. A pattern matches if the mesh name (without .l/.r) contains it; a leading '=' means exact match.",
+  "upper_chest": ["clavicular head of pectoralis major"],
+  "chest": ["sternocostal head of pectoralis major", "abdominal part of pectoralis major"],
+  "front_delts": ["clavicular part of deltoid"],
+  "side_delts": ["acromial part of deltoid"],
+  "rear_delts": ["scapular spinal part of deltoid"],
+  "traps": ["part of trapezius"],
+  "lats": ["latissimus dorsi"],
+  "upper_back": ["rhomboid", "teres major", "teres minor", "infraspinatus"],
+  "lower_back": ["iliocostalis lumborum", "iliocostalis thoracis", "longissimus thoracis", "spinalis thoracis", "multifidus lumborum", "quadratus lumborum"],
+  "biceps": ["biceps brachii", "brachialis muscle"],
+  "triceps": ["triceps brachii", "anconeus"],
+  "forearms": ["brachioradialis", "extensor carpi", "flexor carpi", "palmaris longus", "flexor digitorum superficialis", "flexor digitorum profundus", "=extensor digitorum"],
+  "abs": ["rectus abdominis", "pyramidalis"],
+  "obliques": ["external abdominal oblique", "internal abdominal oblique"],
+  "glutes": ["gluteus maximus", "gluteus medius"],
+  "quads": ["rectus femoris", "vastus lateralis", "vastus medialis", "vastus intermedius"],
+  "hamstrings": ["biceps femoris", "semitendinosus muscle", "semimembranosus muscle"],
+  "adductors": ["adductor longus", "adductor magnus", "adductor brevis", "adductor minimus", "gracilis", "pectineus"],
+  "calves": ["gastrocnemius", "soleus muscle"]
+}

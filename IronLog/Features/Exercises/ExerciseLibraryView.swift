@@ -76,51 +76,6 @@ private struct LibraryRow: View {
     }
 }
 
-/// Exercise detail. Stage 3 adds the animated form demo, muscle map, cues and mistakes.
-struct ExerciseDetailView: View {
-    let exercise: ExerciseDef
-    @Environment(\.openURL) private var openURL
-
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 18) {
-                ScreenTitle(title: exercise.name, kicker: exercise.equipment)
-
-                VStack(alignment: .leading, spacing: 10) {
-                    SectionLabel(text: "Primary")
-                    FlowTags(names: Catalog.shared.muscleNames(exercise.primary), filled: true)
-                    if !exercise.secondary.isEmpty {
-                        SectionLabel(text: "Secondary").padding(.top, 4)
-                        FlowTags(names: Catalog.shared.muscleNames(exercise.secondary), filled: false)
-                    }
-                }
-                .cardStyle()
-
-                if let cues = exercise.cues, !cues.isEmpty {
-                    BulletCard(title: "Form cues", items: cues, icon: "checkmark")
-                }
-                if let mistakes = exercise.mistakes, !mistakes.isEmpty {
-                    BulletCard(title: "Common mistakes", items: mistakes, icon: "xmark")
-                }
-
-                if let url = exercise.youtubeSearchURL {
-                    Button {
-                        Haptics.tap()
-                        openURL(url)
-                    } label: {
-                        Label("Watch form video", systemImage: "play.rectangle.fill")
-                    }
-                    .buttonStyle(.secondary)
-                }
-            }
-            .padding(.horizontal, Theme.gutter)
-            .padding(.bottom, 32)
-        }
-        .screenBackground()
-        .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
 struct BulletCard: View {
     let title: String
     let items: [String]

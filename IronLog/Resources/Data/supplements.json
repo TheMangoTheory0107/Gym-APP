@@ -1,0 +1,11 @@
+{
+  "_readme": "Daily supplement checklist. Reminder time is used if you switch on the bell for that supplement.",
+  "supplements": [
+    { "id": "electrolytes", "name": "Electrolytes",         "when": "During workout",  "hour": 8,  "minute": 30 },
+    { "id": "omega3",       "name": "Omega 3",              "when": "After breakfast", "hour": 10, "minute": 45 },
+    { "id": "whey",         "name": "Whey",                 "when": "Evening meal",    "hour": 16, "minute": 45 },
+    { "id": "creatine",     "name": "Creatine monohydrate", "when": "Any time",        "hour": 11, "minute": 0, "trackStreak": true },
+    { "id": "magnesium",    "name": "Magnesium",            "when": "Bedtime",         "hour": 22, "minute": 30 },
+    { "id": "vitamin-d",    "name": "Vitamin D",            "when": "If needed",       "hour": 11, "minute": 0, "optional": true }
+  ]
+}
