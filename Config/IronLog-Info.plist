@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIUserInterfaceStyle</key>
+	<string>Dark</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Iron Log reads your body weight and body fat from Apple Health to keep your progress charts and BMI up to date.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Iron Log saves the weigh-ins you log in the app to Apple Health.</string>
+</dict>
+</plist>

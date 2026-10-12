@@ -1,0 +1,23 @@
+{
+  "muscles": [
+    { "id": "upper_chest",  "name": "Upper Chest",      "group": "Chest" },
+    { "id": "chest",        "name": "Chest",            "group": "Chest" },
+    { "id": "front_delts",  "name": "Front Delts",      "group": "Shoulders" },
+    { "id": "side_delts",   "name": "Side Delts",       "group": "Shoulders" },
+    { "id": "rear_delts",   "name": "Rear Delts",       "group": "Shoulders" },
+    { "id": "traps",        "name": "Traps",            "group": "Back" },
+    { "id": "lats",         "name": "Lats",             "group": "Back" },
+    { "id": "upper_back",   "name": "Upper Back",       "group": "Back" },
+    { "id": "lower_back",   "name": "Lower Back",       "group": "Back" },
+    { "id": "biceps",       "name": "Biceps",           "group": "Arms" },
+    { "id": "triceps",      "name": "Triceps",          "group": "Arms" },
+    { "id": "forearms",     "name": "Forearms",         "group": "Arms" },
+    { "id": "abs",          "name": "Abs",              "group": "Core" },
+    { "id": "obliques",     "name": "Obliques",         "group": "Core" },
+    { "id": "glutes",       "name": "Glutes",           "group": "Legs" },
+    { "id": "quads",        "name": "Quads",            "group": "Legs" },
+    { "id": "hamstrings",   "name": "Hamstrings",       "group": "Legs" },
+    { "id": "adductors",    "name": "Adductors",        "group": "Legs" },
+    { "id": "calves",       "name": "Calves",           "group": "Legs" }
+  ]
+}

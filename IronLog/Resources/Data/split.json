@@ -1,0 +1,95 @@
+{
+  "days": [
+    {
+      "day": "Monday",
+      "name": "Chest & Abs",
+      "items": [
+        { "exercise": "incline-db-press",   "scheme": "3x6-10" },
+        { "exercise": "flat-bb-bench",      "scheme": "3x8-12" },
+        { "exercise": "decline-db-fly",     "scheme": "3x10-12" },
+        { "exercise": "cable-crossover",    "scheme": "3x12-15" },
+        { "exercise": "pec-deck-fly",       "scheme": "2x12-15" },
+        { "exercise": "decline-crunch",     "scheme": "3x20" },
+        { "exercise": "hanging-leg-raise",  "scheme": "3x20" },
+        { "exercise": "trunk-rotation",     "scheme": "3x20" },
+        { "exercise": "cardio",             "scheme": "1x20-25" }
+      ]
+    },
+    {
+      "day": "Tuesday",
+      "name": "Back & Core",
+      "items": [
+        { "exercise": "lat-pulldown",          "scheme": "3x8-12" },
+        { "exercise": "db-row",                "scheme": "3x8-12" },
+        { "exercise": "seated-cable-row",      "scheme": "3x10-12" },
+        { "exercise": "single-arm-db-row",     "scheme": "2x10-12" },
+        { "exercise": "straight-arm-pulldown", "scheme": "3x12-15" },
+        { "exercise": "back-extension",        "scheme": "2x12-15" },
+        { "exercise": "plank",                 "scheme": "3x120" },
+        { "exercise": "cardio",                "scheme": "1x20-25" }
+      ]
+    },
+    {
+      "day": "Wednesday",
+      "name": "Quads & Abs",
+      "items": [
+        { "exercise": "leg-extension",     "scheme": "20,15,15,15" },
+        { "exercise": "free-squat",        "scheme": "1x50" },
+        { "exercise": "bb-squat",          "scheme": "3x8-10" },
+        { "exercise": "leg-press",         "scheme": "3x8-10" },
+        { "exercise": "lunges",            "scheme": "3x30" },
+        { "exercise": "crunch",            "scheme": "3x20" },
+        { "exercise": "hanging-leg-raise", "scheme": "3x20" },
+        { "exercise": "trunk-rotation",    "scheme": "3x20" },
+        { "exercise": "cardio",            "scheme": "1x20-25" }
+      ]
+    },
+    {
+      "day": "Thursday",
+      "name": "Shoulders & Core",
+      "items": [
+        { "exercise": "seated-db-shoulder-press", "scheme": "3x8-10" },
+        { "exercise": "db-lateral-raise",         "scheme": "4x12-15" },
+        { "exercise": "cable-lateral-raise",      "scheme": "3x12-15" },
+        { "exercise": "reverse-pec-deck",         "scheme": "3x12-15" },
+        { "exercise": "shrugs",                   "scheme": "3x12-15" },
+        { "exercise": "face-pull",                "scheme": "2x12-15" },
+        { "exercise": "plank",                    "scheme": "3x120" },
+        { "exercise": "cardio",                   "scheme": "1x20-25" }
+      ]
+    },
+    {
+      "day": "Friday",
+      "name": "Arms & Abs",
+      "items": [
+        { "exercise": "ez-bar-curl",               "scheme": "3x8-12" },
+        { "exercise": "incline-db-curl",           "scheme": "3x10-12" },
+        { "exercise": "preacher-curl",             "scheme": "2x12-15" },
+        { "exercise": "close-grip-bench",          "scheme": "3x8-10" },
+        { "exercise": "rope-pushdown",             "scheme": "3x10-15" },
+        { "exercise": "overhead-cable-extension",  "scheme": "3x10-15" },
+        { "exercise": "crunch",                    "scheme": "3x20" },
+        { "exercise": "hanging-leg-raise",         "scheme": "3x20" },
+        { "exercise": "trunk-rotation",            "scheme": "3x20" },
+        { "exercise": "cardio",                    "scheme": "1x20-25" }
+      ]
+    },
+    {
+      "day": "Saturday",
+      "name": "Hamstrings, Calves & Core",
+      "items": [
+        { "exercise": "rdl",                 "scheme": "20,15,8-10,8-10,8-10" },
+        { "exercise": "leg-curl",            "scheme": "20,15,15,12" },
+        { "exercise": "standing-calf-raise", "scheme": "3x10-15" },
+        { "exercise": "seated-calf-raise",   "scheme": "3x10-15" },
+        { "exercise": "plank",               "scheme": "3x120" },
+        { "exercise": "cardio",              "scheme": "1x20-25" }
+      ]
+    },
+    {
+      "day": "Sunday",
+      "name": "Rest",
+      "items": []
+    }
+  ]
+}
