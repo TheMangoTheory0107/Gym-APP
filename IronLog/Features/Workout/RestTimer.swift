@@ -60,10 +60,10 @@ final class RestTimer {
         )
         updateActivity(end: end)
         task?.cancel()
-        task = Task { [weak self] in
+        task = Task { @MainActor [weak self] in
             try? await Task.sleep(nanoseconds: UInt64(max(remaining, 0) * 1_000_000_000))
             guard !Task.isCancelled else { return }
-            await MainActor.run { self?.finish(buzz: true) }
+            self?.finish(buzz: true)
         }
     }
 
