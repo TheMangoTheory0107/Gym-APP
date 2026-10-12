@@ -73,7 +73,7 @@
     {"id": "boiled-black-chana", "name": "Boiled black chana", "category": "Protein", "aliases": ["kala chana boiled", "black chickpeas"], "kcal": 160, "protein": 8.8, "carbs": 27, "fat": 2.6, "units": {"cup": 165, "bowl": 150, "katori": 100}},
     {"id": "moong-sprouts", "name": "Moong sprouts", "category": "Protein", "aliases": ["sprouts", "sprouted moong", "mung sprouts"], "kcal": 30, "protein": 3, "carbs": 6, "fat": 0.2, "units": {"bowl": 100, "cup": 100}},
     {"id": "sprouts-salad", "name": "Sprouts salad", "category": "Protein", "aliases": ["sprout chaat"], "kcal": 60, "protein": 4, "carbs": 10, "fat": 0.8, "units": {"bowl": 150}},
-    {"id": "soya-chunks", "name": "Soya chunks", "category": "Protein", "aliases": ["soya bean chunks", "nutrela", "meal maker", "soy chunks"], "kcal": 345, "protein": 52, "carbs": 33, "fat": 0.5, "units": {"katori": 30, "cup": 50, "handful": 25}},
+    {"id": "soya-chunks", "name": "Soya chunks", "category": "Protein", "aliases": ["soya bean chunks", "nutrela", "meal maker", "soy chunks", "soya"], "kcal": 345, "protein": 52, "carbs": 33, "fat": 0.5, "units": {"katori": 30, "cup": 50, "handful": 25}},
     {"id": "soya-chunks-cooked", "name": "Soya chunks cooked", "category": "Protein", "aliases": ["soya curry", "boiled soya chunks"], "kcal": 115, "protein": 17, "carbs": 11, "fat": 0.2, "units": {"bowl": 150}},
     {"id": "tofu", "name": "Tofu", "category": "Protein", "aliases": ["bean curd"], "kcal": 76, "protein": 8, "carbs": 1.9, "fat": 4.8, "units": {"piece": 100, "cup": 250}},
     {"id": "paneer", "name": "Paneer", "category": "Dairy", "aliases": ["cottage cheese", "panir"], "kcal": 265, "protein": 18.3, "carbs": 1.2, "fat": 20.8, "units": {"piece": 20, "cube": 15, "slice": 30, "cup": 120}},
@@ -249,6 +249,12 @@
     {"id": "sugarcane-juice", "name": "Sugarcane juice", "category": "Drinks", "aliases": ["ganne ka ras", "ganna juice"], "kcal": 70, "protein": 0.2, "carbs": 18, "fat": 0, "units": {"glass": 250}},
     {"id": "nimbu-pani", "name": "Nimbu pani", "category": "Drinks", "aliases": ["lemonade", "shikanji", "lemon water"], "kcal": 30, "protein": 0.1, "carbs": 8, "fat": 0, "units": {"glass": 250}},
     {"id": "banana-shake", "name": "Banana shake", "category": "Drinks", "aliases": ["banana milkshake", "milkshake"], "kcal": 90, "protein": 3, "carbs": 15, "fat": 2.5, "units": {"glass": 300}},
-    {"id": "beer", "name": "Beer", "category": "Drinks", "aliases": ["lager"], "kcal": 43, "protein": 0.5, "carbs": 3.6, "fat": 0, "units": {"can": 330, "glass": 330, "bottle": 650}}
+    {"id": "beer", "name": "Beer", "category": "Drinks", "aliases": ["lager"], "kcal": 43, "protein": 0.5, "carbs": 3.6, "fat": 0, "units": {"can": 330, "glass": 330, "bottle": 650}},
+    {"id": "rajma-chawal", "name": "Rajma chawal", "category": "Rice & grains", "aliases": ["rajma rice", "rajma chaawal"], "kcal": 140, "protein": 5, "carbs": 24, "fat": 3, "units": {"plate": 350, "bowl": 250}},
+    {"id": "dal-chawal", "name": "Dal chawal", "category": "Rice & grains", "aliases": ["dal rice", "daal chawal"], "kcal": 125, "protein": 4.5, "carbs": 22, "fat": 2, "units": {"plate": 350, "bowl": 250}},
+    {"id": "chole-bhature", "name": "Chole bhature", "category": "Snacks", "aliases": ["chhole bhature", "chole bhatura"], "kcal": 260, "protein": 7, "carbs": 32, "fat": 12, "units": {"plate": 350}},
+    {"id": "chole-rice", "name": "Chole chawal", "category": "Rice & grains", "aliases": ["chole rice", "chana chawal"], "kcal": 145, "protein": 5.5, "carbs": 25, "fat": 3, "units": {"plate": 350, "bowl": 250}},
+    {"id": "cold-coffee", "name": "Cold coffee", "category": "Drinks", "aliases": ["iced coffee", "coffee shake"], "kcal": 80, "protein": 3, "carbs": 11, "fat": 2.5, "units": {"glass": 300, "cup": 250}},
+    {"id": "protein-shake-milk", "name": "Whey shake with milk", "category": "Supplements", "aliases": ["protein shake", "whey shake"], "kcal": 75, "protein": 10, "carbs": 4, "fat": 2, "units": {"glass": 300}}
   ]
 }
