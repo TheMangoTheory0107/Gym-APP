@@ -1,40 +1,114 @@
+import SwiftData
 import SwiftUI
 
-struct ExerciseLibraryView: View {
-    private let catalog = Catalog.shared
-    @State private var search = ""
+/// Grouping used by the library filters.
+enum LibraryGroup: String, CaseIterable, Identifiable {
+    case all = "All", chest = "Chest", back = "Back", shoulders = "Shoulders", arms = "Arms",
+         legs = "Legs", core = "Core", cardio = "Cardio", stretching = "Stretching"
+    var id: String { rawValue }
 
-    private struct LibrarySection: Identifiable {
-        let group: String
-        let exercises: [ExerciseDef]
-        var id: String { group }
+    static func of(_ ex: ExerciseDef) -> LibraryGroup {
+        if ex.category == "stretching" { return .stretching }
+        if ex.logType == .minutes || ex.category == "cardio" { return .cardio }
+        let group = ex.primary.first.flatMap { Catalog.shared.muscle($0)?.group } ?? ""
+        return LibraryGroup(rawValue: group) ?? .core
+    }
+}
+
+struct ExerciseLibraryView: View {
+    @State private var search = ""
+    @State private var group: LibraryGroup = .all
+    @State private var equipment = "Any"
+    @State private var showAdd = false
+    @State private var refresh = 0
+
+    private var catalog: Catalog { Catalog.shared }
+
+    private var equipmentOptions: [String] {
+        ["Any"] + Set(catalog.exercises.map(\.equipment)).sorted()
     }
 
-    /// Exercises grouped by the muscle group of their first primary muscle.
+    private var filtered: [ExerciseDef] {
+        _ = refresh
+        let q = search.trimmingCharacters(in: .whitespaces)
+        return catalog.exercises.filter { ex in
+            (group == .all || LibraryGroup.of(ex) == group)
+                && (equipment == "Any" || ex.equipment == equipment)
+                && (q.isEmpty
+                    || ex.name.localizedCaseInsensitiveContains(q)
+                    || catalog.muscleNames(ex.primary + ex.secondary).contains { $0.localizedCaseInsensitiveContains(q) })
+        }
+    }
+
+    private struct LibrarySection: Identifiable {
+        let title: String
+        let exercises: [ExerciseDef]
+        var id: String { title }
+    }
+
+    /// Your routine and your own exercises first, then everything else A–Z by group.
     private var sections: [LibrarySection] {
-        let filtered = catalog.exercises.filter { ex in
-            search.isEmpty
-                || ex.name.localizedCaseInsensitiveContains(search)
-                || catalog.muscleNames(ex.primary + ex.secondary).contains { $0.localizedCaseInsensitiveContains(search) }
+        let list = filtered
+        let mine = catalog.splitExerciseIds
+        var out: [LibrarySection] = []
+        let routine = list.filter { mine.contains($0.id) }.sorted { $0.name < $1.name }
+        if !routine.isEmpty { out.append(LibrarySection(title: "Your routine", exercises: routine)) }
+        let custom = list.filter(\.isCustom).sorted { $0.name < $1.name }
+        if !custom.isEmpty { out.append(LibrarySection(title: "Your exercises", exercises: custom)) }
+        let others = list.filter { !mine.contains($0.id) && !$0.isCustom }
+        let grouped = Dictionary(grouping: others, by: LibraryGroup.of)
+        for g in LibraryGroup.allCases where g != .all {
+            if let items = grouped[g], !items.isEmpty {
+                out.append(LibrarySection(title: g.rawValue, exercises: items.sorted { $0.name < $1.name }))
+            }
         }
-        let grouped = Dictionary(grouping: filtered) { ex in
-            ex.primary.first.flatMap { catalog.muscle($0)?.group } ?? "Cardio"
-        }
-        let order = ["Chest", "Back", "Shoulders", "Arms", "Legs", "Core", "Cardio"]
-        return grouped
-            .map { key, value in LibrarySection(group: key, exercises: value.sorted { $0.name < $1.name }) }
-            .sorted { (order.firstIndex(of: $0.group) ?? 99) < (order.firstIndex(of: $1.group) ?? 99) }
+        return out
     }
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVStack(alignment: .leading, spacing: 10) {
-                    ScreenTitle(title: "Exercises", kicker: "\(catalog.exercises.count) movements")
-                        .padding(.bottom, 6)
+                LazyVStack(alignment: .leading, spacing: 10, pinnedViews: []) {
+                    ScreenTitle(title: "Exercises", kicker: "\(filtered.count) of \(catalog.exercises.count) movements")
+                        .padding(.bottom, 2)
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 6) {
+                            ForEach(LibraryGroup.allCases) { g in
+                                Button {
+                                    Haptics.select()
+                                    group = g
+                                } label: {
+                                    Text(g.rawValue.uppercased())
+                                        .font(.display(17))
+                                        .padding(.horizontal, 12)
+                                        .frame(minHeight: 36)
+                                        .foregroundStyle(group == g ? Color.white : Theme.textSecondary)
+                                        .background(group == g ? Theme.accent : Theme.card, in: Capsule())
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
+
+                    Menu {
+                        Picker("Equipment", selection: $equipment) {
+                            ForEach(equipmentOptions, id: \.self) { Text($0.capitalized).tag($0) }
+                        }
+                    } label: {
+                        Label("Equipment: \(equipment.capitalized)", systemImage: "line.3.horizontal.decrease.circle")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(equipment == "Any" ? Theme.textSecondary : Theme.accent)
+                    }
+                    .padding(.vertical, 4)
+
+                    if filtered.isEmpty {
+                        EmptyStateCard(icon: "magnifyingglass", title: "Nothing found",
+                                       message: "Try another name or filter, or add it as your own exercise with the + button.")
+                    }
 
                     ForEach(sections) { section in
-                        SectionLabel(text: section.group, accent: true)
+                        SectionLabel(text: "\(section.title) · \(section.exercises.count)", accent: true)
                             .padding(.top, 10)
                         ForEach(section.exercises) { ex in
                             NavigationLink(value: ex) { LibraryRow(exercise: ex) }
@@ -48,6 +122,19 @@ struct ExerciseLibraryView: View {
             .screenBackground()
             .searchable(text: $search, prompt: "Search exercise or muscle")
             .navigationDestination(for: ExerciseDef.self) { ExerciseDetailView(exercise: $0) }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showAdd = true
+                    } label: {
+                        Image(systemName: "plus").font(.system(size: 17, weight: .bold)).frame(width: 44, height: 44)
+                    }
+                    .accessibilityLabel("Add your own exercise")
+                }
+            }
+            .sheet(isPresented: $showAdd) {
+                AddExerciseSheet { _ in refresh += 1 }
+            }
         }
     }
 }
@@ -56,22 +143,37 @@ private struct LibraryRow: View {
     let exercise: ExerciseDef
 
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
+            Group {
+                if let thumb = BundledImage.load("form_\(exercise.id)_0") {
+                    Image(uiImage: thumb).resizable().scaledToFill()
+                } else {
+                    Image(systemName: exercise.isCustom ? "star.fill" : "figure.strengthtraining.traditional")
+                        .foregroundStyle(Theme.textFaint)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Theme.cardRaised)
+                }
+            }
+            .frame(width: 56, height: 56)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+
             VStack(alignment: .leading, spacing: 4) {
                 Text(exercise.name.uppercased())
-                    .font(.display(21, relativeTo: .headline))
+                    .font(.display(19, relativeTo: .headline))
                     .foregroundStyle(Theme.textPrimary)
-                Text(Catalog.shared.muscleNames(exercise.primary + exercise.secondary).joined(separator: " · "))
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
+                Text(([exercise.equipment.capitalized] + Catalog.shared.muscleNames(exercise.primary)).joined(separator: " · "))
                     .font(.caption.weight(.medium))
                     .foregroundStyle(Theme.textSecondary)
                     .lineLimit(1)
             }
-            Spacer()
+            Spacer(minLength: 0)
             Image(systemName: "chevron.right")
                 .font(.system(size: 13, weight: .bold))
                 .foregroundStyle(Theme.textFaint)
         }
-        .cardStyle(padding: 14)
+        .cardStyle(padding: 10)
         .contentShape(Rectangle())
     }
 }

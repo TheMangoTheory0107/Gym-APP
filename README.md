@@ -55,7 +55,7 @@ All reference data is plain JSON:
 | File | What's in it |
 |---|---|
 | `Shared/Data/split.json` | Weekly split. `scheme` formats: `"3x8-12"`, `"20,15,15,15"`, `"20,15,8-10,8-10,8-10"`. Plank is seconds (`"3x120"`), cardio minutes. |
-| `IronLog/Resources/Data/exercises.json` | Exercises: log type (`weightReps`, `reps`, `seconds`, `minutes`), muscles, weight step, cues, mistakes. |
+| `IronLog/Resources/Data/exercises.json` | 876 exercises (your 38 + the free-exercise-db library): log type (`weightReps`, `reps`, `seconds`, `minutes`), muscles, weight step, cues, mistakes. |
 | `IronLog/Resources/Data/muscles.json` | Muscle ids, names and groups. |
 | `IronLog/Resources/Data/foods.json` | 248 foods: macros per 100 g, aliases (Hinglish spellings), household units (`"piece": 40`, `"bowl": 150`). |
 | `IronLog/Resources/Data/diet_plan.json` | Your meal plan (food ids + quantities). |

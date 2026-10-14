@@ -30,6 +30,26 @@ struct ExerciseDef: Codable, Identifiable, Hashable {
     let imageId: String?
     let cues: [String]?
     let mistakes: [String]?
+    /// From the exercise library: "strength", "stretching", "cardio", "plyometrics", ...
+    let category: String?
+    /// "beginner", "intermediate", "expert"
+    let level: String?
+    /// "split" (your routine), "library" (free-exercise-db) or "custom" (added by you)
+    let source: String?
+    /// Step-by-step instructions (library exercises)
+    let instructions: [String]?
+
+    init(id: String, name: String, logType: LogType, repUnit: String? = nil, equipment: String,
+         primary: [String], secondary: [String], weightStep: Double? = nil, imageId: String? = nil,
+         cues: [String]? = nil, mistakes: [String]? = nil, category: String? = nil, level: String? = nil,
+         source: String? = nil, instructions: [String]? = nil) {
+        self.id = id; self.name = name; self.logType = logType; self.repUnit = repUnit
+        self.equipment = equipment; self.primary = primary; self.secondary = secondary
+        self.weightStep = weightStep; self.imageId = imageId; self.cues = cues; self.mistakes = mistakes
+        self.category = category; self.level = level; self.source = source; self.instructions = instructions
+    }
+
+    var isCustom: Bool { source == "custom" }
 
     var unitLabel: String {
         switch logType {
@@ -80,12 +100,12 @@ final class Catalog {
 
     static let weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
-    let exercises: [ExerciseDef]
+    private(set) var exercises: [ExerciseDef]
     let muscles: [MuscleDef]
     let split: [SplitDay]
     private(set) var loadErrors: [String] = []
 
-    private let exerciseById: [String: ExerciseDef]
+    private var exerciseById: [String: ExerciseDef]
     private let muscleById: [String: MuscleDef]
 
     private init() {
@@ -111,6 +131,16 @@ final class Catalog {
     }
 
     func exercise(_ id: String) -> ExerciseDef? { exerciseById[id] }
+
+    /// Ids of exercises used anywhere in your split.
+    var splitExerciseIds: Set<String> { Set(split.flatMap { $0.items.map(\.exercise) }) }
+
+    /// Adds (or refreshes) exercises you created yourself. Call on the main thread.
+    func register(custom: [ExerciseDef]) {
+        exercises.removeAll { $0.isCustom }
+        exercises.append(contentsOf: custom)
+        for ex in custom { exerciseById[ex.id] = ex }
+    }
     func muscle(_ id: String) -> MuscleDef? { muscleById[id] }
 
     /// Split day for a calendar weekday (1 = Sunday … 7 = Saturday).

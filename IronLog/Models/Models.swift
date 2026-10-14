@@ -13,6 +13,7 @@ enum AppSchema {
         CustomFood.self,
         LearnedPortion.self,
         SupplementCheck.self,
+        CustomExercise.self,
     ]
 }
 
@@ -189,6 +190,34 @@ final class SupplementCheck {
         self.dayKey = dayKey
         self.supplementId = supplementId
         self.takenAt = takenAt
+    }
+}
+
+/// An exercise you added yourself (not in the bundled library).
+@Model
+final class CustomExercise {
+    @Attribute(.unique) var id: String
+    var name: String
+    /// LogType raw value
+    var logType: String
+    var equipment: String
+    var primary: [String]
+    var secondary: [String]
+    var createdAt: Date
+
+    init(id: String, name: String, logType: String, equipment: String, primary: [String], secondary: [String]) {
+        self.id = id
+        self.name = name
+        self.logType = logType
+        self.equipment = equipment
+        self.primary = primary
+        self.secondary = secondary
+        self.createdAt = .now
+    }
+
+    var definition: ExerciseDef {
+        ExerciseDef(id: id, name: name, logType: LogType(rawValue: logType) ?? .weightReps, equipment: equipment,
+                    primary: primary, secondary: secondary, weightStep: 2.5, source: "custom")
     }
 }
 

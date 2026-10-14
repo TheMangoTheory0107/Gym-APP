@@ -12,6 +12,7 @@ struct ActiveWorkoutView: View {
     @State private var confirmFinish = false
     @State private var confirmDiscard = false
     @State private var summary: WorkoutSummary?
+    @State private var showPicker = false
 
     private var restTimer = RestTimer.shared
 
@@ -62,9 +63,18 @@ struct ActiveWorkoutView: View {
                         .id(block.id)
                     }
 
+                    Button {
+                        Haptics.tap()
+                        showPicker = true
+                    } label: {
+                        Label("Add exercise", systemImage: "plus")
+                    }
+                    .buttonStyle(.secondary)
+                    .padding(.top, 4)
+
                     Button("Finish workout") { confirmFinish = true }
                         .buttonStyle(.primary)
-                        .padding(.top, 8)
+                        .padding(.top, 4)
                 }
                 .padding(.horizontal, Theme.gutter)
                 .padding(.bottom, 24)
@@ -105,6 +115,9 @@ struct ActiveWorkoutView: View {
                         .frame(width: 44, height: 44)
                 }
             }
+        }
+        .sheet(isPresented: $showPicker) {
+            ExercisePickerSheet { ex in withAnimation(.snappy) { model.addExercise(ex) } }
         }
         .sheet(item: $detailExercise) { ex in
             NavigationStack { ExerciseDetailView(exercise: ex) }

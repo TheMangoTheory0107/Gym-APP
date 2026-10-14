@@ -15,6 +15,8 @@ enum BackupService {
         var customFoods: [Custom]
         var learnedPortions: [Portion]
         var supplements: [Supplement]
+        /// Added later; older backups don't have it.
+        var customExercises: [Exercise]?
     }
 
     struct Session: Codable {
@@ -35,6 +37,10 @@ enum BackupService {
     }
     struct Portion: Codable { var foodId: String; var unit: String; var grams: Double }
     struct Supplement: Codable { var dayKey: String; var supplementId: String; var takenAt: Date }
+    struct Exercise: Codable {
+        var id: String; var name: String; var logType: String; var equipment: String
+        var primary: [String]; var secondary: [String]
+    }
 
     private static let settingKeys = [ProfileKey.heightCm, ProfileKey.kcalTarget, ProfileKey.proteinTarget,
                                       ProfileKey.carbsTarget, ProfileKey.fatTarget, ProfileKey.restSeconds]
@@ -70,6 +76,10 @@ enum BackupService {
             },
             supplements: try context.fetch(FetchDescriptor<SupplementCheck>()).map {
                 Supplement(dayKey: $0.dayKey, supplementId: $0.supplementId, takenAt: $0.takenAt)
+            },
+            customExercises: try context.fetch(FetchDescriptor<CustomExercise>()).map {
+                Exercise(id: $0.id, name: $0.name, logType: $0.logType, equipment: $0.equipment,
+                         primary: $0.primary, secondary: $0.secondary)
             }
         )
 
@@ -103,6 +113,7 @@ enum BackupService {
         try context.delete(model: CustomFood.self)
         try context.delete(model: LearnedPortion.self)
         try context.delete(model: SupplementCheck.self)
+        try context.delete(model: CustomExercise.self)
 
         for s in b.sessions {
             let session = WorkoutSession(dayName: s.dayName, splitWeekday: s.splitWeekday, startedAt: s.startedAt)
@@ -130,6 +141,14 @@ enum BackupService {
         }
         for p in b.learnedPortions { context.insert(LearnedPortion(foodId: p.foodId, unit: p.unit, grams: p.grams)) }
         for s in b.supplements { context.insert(SupplementCheck(dayKey: s.dayKey, supplementId: s.supplementId, takenAt: s.takenAt)) }
+        var customDefs: [ExerciseDef] = []
+        for e in b.customExercises ?? [] {
+            let c = CustomExercise(id: e.id, name: e.name, logType: e.logType, equipment: e.equipment,
+                                   primary: e.primary, secondary: e.secondary)
+            context.insert(c)
+            customDefs.append(c.definition)
+        }
+        Catalog.shared.register(custom: customDefs)
         for (k, v) in b.settings {
             if k == ProfileKey.restSeconds { UserDefaults.standard.set(Int(v), forKey: k) } else { UserDefaults.standard.set(v, forKey: k) }
         }

@@ -32,6 +32,8 @@ struct RootTabView: View {
         .onChange(of: tab) { _, _ in Haptics.select() }
         .task {
             seedIfNeeded()
+            let custom = (try? context.fetch(FetchDescriptor<CustomExercise>())) ?? []
+            Catalog.shared.register(custom: custom.map(\.definition))
             WidgetSync.update(context: context)
         }
         .onChange(of: scenePhase) { _, phase in

@@ -168,6 +168,12 @@ struct ExerciseDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 ScreenTitle(title: exercise.name, kicker: exercise.equipment)
+                if exercise.level != nil || exercise.category != nil {
+                    HStack(spacing: 6) {
+                        if let level = exercise.level { Tag(text: level, filled: level == "beginner") }
+                        if let category = exercise.category { Tag(text: category) }
+                    }
+                }
 
                 FormDemoView(exercise: exercise)
                     .cardStyle(padding: 8)
@@ -195,6 +201,24 @@ struct ExerciseDetailView: View {
                 }
                 if let mistakes = exercise.mistakes, !mistakes.isEmpty {
                     BulletCard(title: "Common mistakes", items: mistakes, icon: "xmark")
+                }
+                if let steps = exercise.instructions, !steps.isEmpty {
+                    VStack(alignment: .leading, spacing: 10) {
+                        SectionLabel(text: "How to do it")
+                        ForEach(Array(steps.enumerated()), id: \.offset) { i, step in
+                            HStack(alignment: .top, spacing: 10) {
+                                Text("\(i + 1)")
+                                    .font(.display(20))
+                                    .foregroundStyle(Theme.accent)
+                                    .frame(width: 20, alignment: .leading)
+                                Text(step)
+                                    .font(.subheadline)
+                                    .foregroundStyle(Theme.textPrimary)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
+                    }
+                    .cardStyle()
                 }
 
                 if let url = exercise.youtubeSearchURL {

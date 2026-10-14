@@ -52,32 +52,68 @@ final class ActiveWorkoutModel {
 
     private func buildBlocks() -> [ExerciseBlock] {
         let catalog = Catalog.shared
-        guard let day = catalog.splitDay(weekday: session.splitWeekday) else { return [] }
-
-        return day.items.enumerated().compactMap { index, item -> ExerciseBlock? in
-            guard let ex = catalog.exercise(item.exercise) else { return nil }
-            let scheme = RepScheme(item.scheme)
-            let last = WorkoutStats.lastTime(exerciseId: ex.id, excluding: session.id, context: context)
-            let saved = session.sets.filter { $0.exerciseId == ex.id }
-            let count = max(scheme.setCount, (saved.map(\.setIndex).max() ?? -1) + 1, 1)
-
-            let drafts: [SetDraft] = (0..<count).map { i -> SetDraft in
-                let target: RepTarget? = i < scheme.sets.count ? scheme.sets[i] : scheme.sets.last
-                if let log = saved.first(where: { $0.setIndex == i }) {
-                    return SetDraft(target: target, weightKg: log.weightKg, reps: log.reps, seconds: log.seconds, log: log)
-                }
-                let prev: SetLog? = i < last.count ? last[i] : last.last
-                return SetDraft(
-                    target: target,
-                    weightKg: prev?.weightKg ?? 0,
-                    reps: prev?.reps ?? target?.suggested ?? 10,
-                    seconds: prev?.seconds ?? Self.defaultSeconds(for: ex, target: target),
-                    log: nil
-                )
+        var blocks: [ExerciseBlock] = []
+        if let day = catalog.splitDay(weekday: session.splitWeekday) {
+            for item in day.items {
+                guard let ex = catalog.exercise(item.exercise) else { continue }
+                blocks.append(makeBlock(id: blocks.count, item: item, exercise: ex))
             }
-            return ExerciseBlock(id: index, item: item, exercise: ex, sets: drafts,
-                                 lastTime: WorkoutStats.lastSummary(last, exercise: ex))
         }
+        // Exercises you added during this workout (restored when resuming).
+        let planned = Set(blocks.map(\.exercise.id))
+        let extras = Dictionary(grouping: session.sets.filter { !planned.contains($0.exerciseId) }, by: \.exerciseId)
+            .sorted { ($0.value.map(\.completedAt).min() ?? .now) < ($1.value.map(\.completedAt).min() ?? .now) }
+        for (id, _) in extras {
+            guard let ex = catalog.exercise(id) else { continue }
+            blocks.append(makeBlock(id: blocks.count, item: Self.defaultItem(for: ex), exercise: ex))
+        }
+        return blocks
+    }
+
+    private func makeBlock(id: Int, item: SplitItem, exercise ex: ExerciseDef) -> ExerciseBlock {
+        let scheme = RepScheme(item.scheme)
+        let last = WorkoutStats.lastTime(exerciseId: ex.id, excluding: session.id, context: context)
+        let saved = session.sets.filter { $0.exerciseId == ex.id }
+        let count = max(scheme.setCount, (saved.map(\.setIndex).max() ?? -1) + 1, 1)
+
+        let drafts: [SetDraft] = (0..<count).map { i -> SetDraft in
+            let target: RepTarget? = i < scheme.sets.count ? scheme.sets[i] : scheme.sets.last
+            if let log = saved.first(where: { $0.setIndex == i }) {
+                return SetDraft(target: target, weightKg: log.weightKg, reps: log.reps, seconds: log.seconds, log: log)
+            }
+            let prev: SetLog? = i < last.count ? last[i] : last.last
+            return SetDraft(
+                target: target,
+                weightKg: prev?.weightKg ?? 0,
+                reps: prev?.reps ?? target?.suggested ?? 10,
+                seconds: prev?.seconds ?? Self.defaultSeconds(for: ex, target: target),
+                log: nil
+            )
+        }
+        return ExerciseBlock(id: id, item: item, exercise: ex, sets: drafts,
+                             lastTime: WorkoutStats.lastSummary(last, exercise: ex))
+    }
+
+    /// Sensible starting sets for an exercise that isn't in your split.
+    static func defaultItem(for ex: ExerciseDef) -> SplitItem {
+        let scheme: String
+        switch ex.logType {
+        case .weightReps: scheme = "3x8-12"
+        case .reps: scheme = "3x12"
+        case .seconds: scheme = "3x45"
+        case .minutes: scheme = "1x20"
+        }
+        return SplitItem(exercise: ex.id, scheme: scheme, note: nil)
+    }
+
+    /// Add any exercise to today's workout.
+    func addExercise(_ ex: ExerciseDef) {
+        if let existing = blocks.first(where: { $0.exercise.id == ex.id }) {
+            expandedBlock = existing.id
+            return
+        }
+        blocks.append(makeBlock(id: blocks.count, item: Self.defaultItem(for: ex), exercise: ex))
+        expandedBlock = blocks.count - 1
     }
 
     private static func defaultSeconds(for ex: ExerciseDef, target: RepTarget?) -> Int {
