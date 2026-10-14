@@ -17,6 +17,8 @@ struct NutritionView: View {
     @State private var review: ReviewRequest?
     @State private var toast: String?
     @FocusState private var inputFocused: Bool
+    @State private var dictation = SpeechDictation()
+    @State private var spokenPrefix = ""
 
     private let db = FoodDatabase.shared
 
@@ -131,7 +133,8 @@ struct NutritionView: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 2) {
                 Text(name.uppercased()).font(.system(size: 11, weight: .bold)).tracking(0.6).foregroundStyle(Theme.textFaint)
-                if emphasised { Spacer(minLength: 0); HelpButton(term: "macros").frame(width: 20, height: 20) }
+                Spacer(minLength: 0)
+                HelpButton(term: name.lowercased()).frame(width: 20, height: 20)
             }
             HStack(alignment: .firstTextBaseline, spacing: 2) {
                 Text("\(Int(value))").font(.display(30))
@@ -243,45 +246,48 @@ struct NutritionView: View {
                     .submitLabel(.done)
             }
             .padding(.horizontal, 10)
+            .padding(.trailing, 44)
             .background(Theme.cardRaised, in: RoundedRectangle(cornerRadius: 10))
+            .overlay(alignment: .topTrailing) {
+                Button {
+                    inputFocused = false
+                    if !dictation.isListening { spokenPrefix = text.isEmpty ? "" : text + ", " }
+                    Task { await dictation.toggle() }
+                } label: {
+                    Image(systemName: dictation.isListening ? "stop.fill" : "mic.fill")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(width: 36, height: 36)
+                        .background(dictation.isListening ? AnyShapeStyle(Theme.accentGradient) : AnyShapeStyle(Theme.card),
+                                    in: Circle())
+                        .overlay(Circle().strokeBorder(Theme.stroke, lineWidth: dictation.isListening ? 0 : 1))
+                        .symbolEffect(.pulse, isActive: dictation.isListening)
+                }
+                .buttonStyle(.plain)
+                .padding(6)
+                .accessibilityLabel(dictation.isListening ? "Stop listening" : "Speak your food")
+            }
+            .onChange(of: dictation.transcript) { _, spoken in
+                if dictation.isListening || !spoken.isEmpty { text = spokenPrefix + spoken }
+            }
 
-            Label("Prefer talking? Tap the microphone on the keyboard and say it.", systemImage: "mic.fill")
-                .font(.caption)
-                .foregroundStyle(Theme.textFaint)
+            if let error = dictation.errorMessage {
+                Text(error).font(.caption).foregroundStyle(Theme.ember)
+            } else {
+                Text(dictation.isListening ? "Listening… say it like you'd text it, then tap stop."
+                                           : "Type or tap the mic and say it, e.g. \"do roti, ek katori dal\".")
+                    .font(.caption)
+                    .foregroundStyle(dictation.isListening ? Theme.ember : Theme.textFaint)
+            }
 
             Button {
+                dictation.stop()
                 parse()
             } label: {
                 Label("Log food", systemImage: "plus")
             }
             .buttonStyle(.primary)
             .disabled(text.trimmingCharacters(in: .whitespaces).isEmpty)
-
-            HStack(spacing: 10) {
-                Button {
-                    UIPasteboard.general.string = FoodParser.claudePrompt(for: text)
-                    Haptics.success()
-                    flash("Prompt copied. Paste it into the Claude app.")
-                } label: {
-                    Label("Copy prompt for Claude", systemImage: "doc.on.doc")
-                        .font(.display(17))
-                        .frame(maxWidth: .infinity, minHeight: 44)
-                }
-                .buttonStyle(.plain)
-                .background(Theme.cardRaised, in: RoundedRectangle(cornerRadius: 10))
-
-                Button {
-                    pasteClaude()
-                } label: {
-                    Label("Paste result", systemImage: "doc.on.clipboard")
-                        .font(.display(17))
-                        .frame(maxWidth: .infinity, minHeight: 44)
-                }
-                .buttonStyle(.plain)
-                .background(Theme.cardRaised, in: RoundedRectangle(cornerRadius: 10))
-            }
-            .foregroundStyle(Theme.textPrimary)
-        }
         .cardStyle()
     }
 
@@ -292,15 +298,6 @@ struct NutritionView: View {
         guard !items.isEmpty else { return }
         review = ReviewRequest(items: items, meal: FoodLogStore.defaultMeal(), title: "Check & save")
         text = ""
-    }
-
-    private func pasteClaude() {
-        guard let pasted = UIPasteboard.general.string, let items = FoodParser.parseClaudeJSON(pasted) else {
-            Haptics.warning()
-            flash("Clipboard has no food JSON. Copy Claude's answer first.")
-            return
-        }
-        review = ReviewRequest(items: items, meal: FoodLogStore.defaultMeal(), title: "From Claude")
     }
 
     private func ateAsPlanned(_ meal: PlanMeal) {

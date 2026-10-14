@@ -10,6 +10,10 @@ enum Glossary {
         "pr": ("PR · Personal record", "Your best ever on an exercise: the heaviest weight, the most reps, or the strongest estimated 1-rep max."),
         "volume": ("Volume", "Weight × reps added up for all sets. More volume over the weeks usually means more muscle."),
         "1rm": ("Estimated 1RM", "The most you could lift once, estimated from your sets. Useful for tracking strength without maxing out."),
+        "protein": ("Protein", "Builds and repairs muscle — the most important macro for your goal. Aim for 1.6–2.2 g per kg of body weight, spread over 4–5 meals. Good sources: eggs, chicken, paneer, dal, curd, soya chunks, whey."),
+        "carbs": ("Carbs", "Your main fuel for training and recovery. Eat most of them around your workout. Better picks: rice, roti, oats, poha, potatoes, fruit. Go easy on sugar, maida and fried snacks."),
+        "fat": ("Fat", "Keeps hormones (including testosterone) and joints healthy and helps absorb vitamins. Don't go too low. Good sources: nuts, peanut butter, ghee in moderation, eggs, fish, olive or mustard oil."),
+        "fibre": ("Fibre", "Keeps digestion regular, keeps you full longer and helps cholesterol and blood sugar. Aim for 30–40 g a day from dal, rajma, chana, vegetables, fruit, oats and whole-wheat roti. Raise it slowly and drink water."),
         "macros": ("Macros", "Protein builds muscle, carbs fuel training, fat supports hormones. Each has a daily target."),
     ]
 }
