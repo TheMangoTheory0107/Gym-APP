@@ -7,6 +7,7 @@ enum ProfileKey {
     static let proteinTarget = "targets.protein"
     static let carbsTarget = "targets.carbs"
     static let fatTarget = "targets.fat"
+    static let fiberTarget = "targets.fiber"
     static let restSeconds = "workout.restSeconds"
     static let healthSyncEnabled = "health.syncEnabled"
     static let didSeed = "app.didSeed"
@@ -26,6 +27,8 @@ enum ProfileDefault {
     static let protein = 180.0
     static let carbs = 326.0
     static let fat = 75.0
+    /// ~14 g per 1,000 kcal
+    static let fiber = 35.0
     static let restSeconds = 90
     /// ~35 ml per kg plus ~500 ml for training days.
     static let waterTargetMl = 3500.0

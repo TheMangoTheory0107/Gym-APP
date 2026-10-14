@@ -89,8 +89,15 @@ final class BodyMetric {
     var date: Date
     var weightKg: Double
     var bodyFatPercent: Double?
-    /// "app" or "health"
+    /// "app", "health" or "scan"
     var source: String
+    // Extra readings from a body-composition scan (InBody, Tanita, smart scales). All optional.
+    var muscleMassKg: Double?
+    var fatMassKg: Double?
+    var visceralFat: Double?
+    var bmr: Double?
+    var bodyWater: Double?
+    var bodyScore: Double?
 
     init(date: Date = .now, weightKg: Double, bodyFatPercent: Double? = nil, source: String = "app") {
         self.date = date
@@ -117,9 +124,10 @@ final class FoodEntry {
     var protein: Double
     var carbs: Double
     var fat: Double
+    var fiber: Double = 0
 
     init(date: Date = .now, meal: String, name: String, foodId: String?, grams: Double,
-         kcal: Double, protein: Double, carbs: Double, fat: Double) {
+         kcal: Double, protein: Double, carbs: Double, fat: Double, fiber: Double = 0) {
         self.id = UUID()
         self.date = date
         self.meal = meal
@@ -130,6 +138,7 @@ final class FoodEntry {
         self.protein = protein
         self.carbs = carbs
         self.fat = fat
+        self.fiber = fiber
     }
 }
 
@@ -143,6 +152,7 @@ final class CustomFood {
     var proteinPer100g: Double
     var carbsPer100g: Double
     var fatPer100g: Double
+    var fiberPer100g: Double = 0
     var createdAt: Date
 
     init(id: String, name: String, aliases: [String] = [], kcalPer100g: Double,

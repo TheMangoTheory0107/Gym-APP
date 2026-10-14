@@ -11,6 +11,7 @@ struct NutritionView: View {
     @AppStorage(ProfileKey.proteinTarget) private var proteinTarget = ProfileDefault.protein
     @AppStorage(ProfileKey.carbsTarget) private var carbsTarget = ProfileDefault.carbs
     @AppStorage(ProfileKey.fatTarget) private var fatTarget = ProfileDefault.fat
+    @AppStorage(ProfileKey.fiberTarget) private var fiberTarget = ProfileDefault.fiber
 
     @State private var text = ""
     @State private var review: ReviewRequest?
@@ -25,7 +26,7 @@ struct NutritionView: View {
     }
 
     private var eaten: Macros {
-        todaysFood.reduce(Macros()) { $0 + Macros(kcal: $1.kcal, protein: $1.protein, carbs: $1.carbs, fat: $1.fat) }
+        todaysFood.reduce(Macros()) { $0 + Macros(kcal: $1.kcal, protein: $1.protein, carbs: $1.carbs, fat: $1.fat, fiber: $1.fiber) }
     }
 
     var body: some View {
@@ -115,10 +116,15 @@ struct NutritionView: View {
     }
 
     private var macroBars: some View {
-        HStack(spacing: 8) {
-            macroTile("Protein", eaten.protein, proteinTarget, emphasised: true)
-            macroTile("Carbs", eaten.carbs, carbsTarget)
-            macroTile("Fat", eaten.fat, fatTarget)
+        VStack(spacing: 8) {
+            HStack(spacing: 8) {
+                macroTile("Protein", eaten.protein, proteinTarget, emphasised: true)
+                macroTile("Carbs", eaten.carbs, carbsTarget)
+            }
+            HStack(spacing: 8) {
+                macroTile("Fat", eaten.fat, fatTarget)
+                macroTile("Fibre", eaten.fiber, fiberTarget)
+            }
         }
     }
 

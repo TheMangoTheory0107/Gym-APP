@@ -6,6 +6,8 @@
 	<string>Dark</string>
 	<key>NSSupportsLiveActivities</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Take a photo of your InBody or body-composition report so Iron Log can read the numbers on your phone.</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Iron Log reads your weight, body fat, water, steps, activity and workouts from Apple Health so your dashboard, streak and progress update automatically.</string>
 	<key>NSHealthUpdateUsageDescription</key>

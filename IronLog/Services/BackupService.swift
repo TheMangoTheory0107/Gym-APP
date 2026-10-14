@@ -29,7 +29,7 @@ enum BackupService {
     struct Metric: Codable { var date: Date; var weightKg: Double; var bodyFatPercent: Double?; var source: String }
     struct Food: Codable {
         var date: Date; var meal: String; var name: String; var foodId: String?; var grams: Double
-        var kcal: Double; var protein: Double; var carbs: Double; var fat: Double
+        var kcal: Double; var protein: Double; var carbs: Double; var fat: Double; var fiber: Double?
     }
     struct Custom: Codable {
         var id: String; var name: String; var aliases: [String]
@@ -65,7 +65,7 @@ enum BackupService {
             },
             food: try context.fetch(FetchDescriptor<FoodEntry>()).map {
                 Food(date: $0.date, meal: $0.meal, name: $0.name, foodId: $0.foodId, grams: $0.grams,
-                     kcal: $0.kcal, protein: $0.protein, carbs: $0.carbs, fat: $0.fat)
+                     kcal: $0.kcal, protein: $0.protein, carbs: $0.carbs, fat: $0.fat, fiber: $0.fiber)
             },
             customFoods: try context.fetch(FetchDescriptor<CustomFood>()).map {
                 Custom(id: $0.id, name: $0.name, aliases: $0.aliases, kcal: $0.kcalPer100g,
@@ -133,7 +133,7 @@ enum BackupService {
         }
         for f in b.food {
             context.insert(FoodEntry(date: f.date, meal: f.meal, name: f.name, foodId: f.foodId, grams: f.grams,
-                                     kcal: f.kcal, protein: f.protein, carbs: f.carbs, fat: f.fat))
+                                     kcal: f.kcal, protein: f.protein, carbs: f.carbs, fat: f.fat, fiber: f.fiber ?? 0))
         }
         for c in b.customFoods {
             context.insert(CustomFood(id: c.id, name: c.name, aliases: c.aliases, kcalPer100g: c.kcal,

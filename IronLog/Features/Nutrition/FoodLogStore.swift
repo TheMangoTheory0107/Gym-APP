@@ -31,7 +31,8 @@ enum FoodLogStore {
         if let direct = item.directMacros {
             let base = item.directGrams ?? g
             let k = base > 0 ? g / base : 1
-            return Macros(kcal: direct.kcal * k, protein: direct.protein * k, carbs: direct.carbs * k, fat: direct.fat * k)
+            return Macros(kcal: direct.kcal * k, protein: direct.protein * k, carbs: direct.carbs * k, fat: direct.fat * k,
+                          fiber: direct.fiber * k)
         }
         return item.food?.macros(grams: g) ?? Macros()
     }
@@ -44,7 +45,7 @@ enum FoodLogStore {
             let g = grams(for: item, learned: learned)
             let m = macros(for: item, learned: learned)
             context.insert(FoodEntry(date: date, meal: meal, name: item.displayName, foodId: item.food?.id,
-                                     grams: g, kcal: m.kcal, protein: m.protein, carbs: m.carbs, fat: m.fat))
+                                     grams: g, kcal: m.kcal, protein: m.protein, carbs: m.carbs, fat: m.fat, fiber: m.fiber))
 
             if let override = item.gramsOverride, let food = item.food, item.qty > 0,
                !["g", "ml", "kg", "l"].contains(item.unit) {
@@ -85,7 +86,7 @@ enum FoodLogStore {
         var out: [String: Macros] = [:]
         for e in entries {
             out[e.date.dayKey, default: Macros()] = out[e.date.dayKey, default: Macros()]
-                + Macros(kcal: e.kcal, protein: e.protein, carbs: e.carbs, fat: e.fat)
+                + Macros(kcal: e.kcal, protein: e.protein, carbs: e.carbs, fat: e.fat, fiber: e.fiber)
         }
         return out
     }

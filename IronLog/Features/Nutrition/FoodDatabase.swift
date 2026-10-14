@@ -10,28 +10,30 @@ struct FoodItem: Codable, Identifiable, Hashable {
     let protein: Double
     let carbs: Double
     let fat: Double
+    /// Dietary fibre per 100 g (older/custom foods may not have it).
+    let fiber: Double?
     /// Grams in one household unit, e.g. ["piece": 40, "bowl": 150]
     let units: [String: Double]
     var isCustom = false
 
-    enum CodingKeys: String, CodingKey { case id, name, category, aliases, kcal, protein, carbs, fat, units }
+    enum CodingKeys: String, CodingKey { case id, name, category, aliases, kcal, protein, carbs, fat, fiber, units }
 
     init(id: String, name: String, category: String, aliases: [String], kcal: Double, protein: Double,
-         carbs: Double, fat: Double, units: [String: Double], isCustom: Bool = false) {
+         carbs: Double, fat: Double, fiber: Double? = nil, units: [String: Double], isCustom: Bool = false) {
         self.id = id; self.name = name; self.category = category; self.aliases = aliases
-        self.kcal = kcal; self.protein = protein; self.carbs = carbs; self.fat = fat
+        self.kcal = kcal; self.protein = protein; self.carbs = carbs; self.fat = fat; self.fiber = fiber
         self.units = units; self.isCustom = isCustom
     }
 
     init(custom: CustomFood) {
         self.init(id: custom.id, name: custom.name, category: "My foods", aliases: custom.aliases,
                   kcal: custom.kcalPer100g, protein: custom.proteinPer100g, carbs: custom.carbsPer100g,
-                  fat: custom.fatPer100g, units: [:], isCustom: true)
+                  fat: custom.fatPer100g, fiber: custom.fiberPer100g, units: [:], isCustom: true)
     }
 
     func macros(grams: Double) -> Macros {
         let k = grams / 100
-        return Macros(kcal: kcal * k, protein: protein * k, carbs: carbs * k, fat: fat * k)
+        return Macros(kcal: kcal * k, protein: protein * k, carbs: carbs * k, fat: fat * k, fiber: (fiber ?? 0) * k)
     }
 }
 
@@ -40,9 +42,11 @@ struct Macros: Hashable {
     var protein: Double = 0
     var carbs: Double = 0
     var fat: Double = 0
+    var fiber: Double = 0
 
     static func + (a: Macros, b: Macros) -> Macros {
-        Macros(kcal: a.kcal + b.kcal, protein: a.protein + b.protein, carbs: a.carbs + b.carbs, fat: a.fat + b.fat)
+        Macros(kcal: a.kcal + b.kcal, protein: a.protein + b.protein, carbs: a.carbs + b.carbs, fat: a.fat + b.fat,
+               fiber: a.fiber + b.fiber)
     }
 }
 

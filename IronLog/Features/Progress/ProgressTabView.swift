@@ -56,6 +56,7 @@ private struct BodySection: View {
     let metrics: [BodyMetric]
     @AppStorage(ProfileKey.heightCm) private var heightCm = ProfileDefault.heightCm
     @State private var showWeighIn = false
+    @State private var showScan = false
     @State private var range = 90
 
     private var latest: BodyMetric? { metrics.first }
@@ -70,13 +71,26 @@ private struct BodySection: View {
         VStack(alignment: .leading, spacing: 18) {
             if let latest { bodyCard(latest) }
 
-            Button {
-                Haptics.tap()
-                showWeighIn = true
-            } label: {
-                Label("Log weigh-in", systemImage: "scalemass.fill")
+            if let scan = metrics.first(where: { $0.muscleMassKg != nil || $0.visceralFat != nil || $0.bmr != nil }) {
+                BodyCompositionCard(metric: scan)
             }
-            .buttonStyle(.primary)
+
+            HStack(spacing: 10) {
+                Button {
+                    Haptics.tap()
+                    showWeighIn = true
+                } label: {
+                    Label("Weigh-in", systemImage: "scalemass.fill")
+                }
+                .buttonStyle(.primary)
+                Button {
+                    Haptics.tap()
+                    showScan = true
+                } label: {
+                    Label("Scan report", systemImage: "doc.text.viewfinder")
+                }
+                .buttonStyle(.secondary)
+            }
 
             if chartData.count >= 2 {
                 VStack(alignment: .leading, spacing: 10) {
@@ -132,6 +146,8 @@ private struct BodySection: View {
                                 .foregroundStyle(Theme.textSecondary)
                             if m.source == "health" {
                                 Image(systemName: "heart.fill").font(.caption2).foregroundStyle(Theme.accent)
+                            } else if m.source == "scan" {
+                                Image(systemName: "doc.text.viewfinder").font(.caption2).foregroundStyle(Theme.accent)
                             }
                             Spacer()
                             if let bf = m.bodyFatPercent {
@@ -153,6 +169,7 @@ private struct BodySection: View {
             WeighInSheet(lastWeight: latest?.weightKg ?? ProfileDefault.startWeightKg, lastBodyFat: latestBodyFat)
                 .presentationDetents([.medium, .large])
         }
+        .sheet(isPresented: $showScan) { BodyScanSheet() }
     }
 
     private func bodyCard(_ m: BodyMetric) -> some View {

@@ -221,8 +221,8 @@ enum FoodParser {
         """
         Estimate the nutrition for this Indian/gym meal: "\(meal.isEmpty ? "<describe your meal>" : meal)".
         Reply with ONLY a JSON array, no other text. One object per food item, with these keys:
-        "name" (string), "grams" (number, cooked weight), "kcal", "protein", "carbs", "fat" (numbers, for that portion, in grams).
-        Example: [{"name":"Roti","grams":80,"kcal":224,"protein":6.8,"carbs":38,"fat":4.4}]
+        "name" (string), "grams" (number, cooked weight), "kcal", "protein", "carbs", "fat", "fiber" (numbers, for that portion, in grams).
+        Example: [{"name":"Roti","grams":80,"kcal":224,"protein":6.8,"carbs":38,"fat":4.4,"fiber":3.9}]
         """
     }
 
@@ -237,13 +237,15 @@ enum FoodParser {
             let protein: Double?
             let carbs: Double?
             let fat: Double?
+            let fiber: Double?
         }
         guard let data = slice.data(using: .utf8),
               let items = try? JSONDecoder().decode([Item].self, from: data), !items.isEmpty else { return nil }
         return items.map { it in
             ParsedFood(source: it.name, query: it.name, qty: it.grams ?? 100, unit: "g", food: nil, alternatives: [],
                        gramsOverride: nil,
-                       directMacros: Macros(kcal: it.kcal, protein: it.protein ?? 0, carbs: it.carbs ?? 0, fat: it.fat ?? 0),
+                       directMacros: Macros(kcal: it.kcal, protein: it.protein ?? 0, carbs: it.carbs ?? 0, fat: it.fat ?? 0,
+                                            fiber: it.fiber ?? 0),
                        directGrams: it.grams, directName: it.name)
         }
     }

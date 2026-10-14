@@ -1,0 +1,437 @@
+# name | aliases | kcal,protein,carbs,fat,fibre per 100 g | units | category
+# ---------- RAW: grains, flours, millets ----------
+Wheat flour (atta) | atta,whole wheat flour,gehun ka atta | 340,12.1,69.4,1.7,11.4 | cup=120;tbsp=8 | Raw: grains & flours
+Maida | refined flour,all purpose flour | 351,11,74,0.9,2.7 | cup=125;tbsp=8 | Raw: grains & flours
+Besan | gram flour,chickpea flour,chana atta | 387,22.4,57.8,6.7,10.8 | cup=92;tbsp=7 | Raw: grains & flours
+Sooji | rava,semolina,suji | 360,12.7,72.8,1.1,3.9 | cup=167;tbsp=10 | Raw: grains & flours
+Raw rice | uncooked rice,chawal raw | 356,7.9,78.2,0.5,1.0 | cup=185;katori=120 | Raw: grains & flours
+Raw basmati rice | uncooked basmati | 349,8.1,77.1,0.6,1.3 | cup=185;katori=120 | Raw: grains & flours
+Raw brown rice | uncooked brown rice | 362,7.5,76,2.7,3.4 | cup=190 | Raw: grains & flours
+Poha raw | flattened rice raw,chivda rice | 350,6.7,77,1.1,2.4 | cup=60;katori=50 | Raw: grains & flours
+Bajra | pearl millet,bajri | 348,11,61.8,5.4,11.5 | cup=170 | Raw: grains & flours
+Jowar | sorghum,jondhale | 334,10,67.7,1.7,10.2 | cup=190 | Raw: grains & flours
+Ragi | finger millet,nachni,nachni flour,ragi flour | 320,7.2,66.8,1.9,11.2 | cup=120;tbsp=8 | Raw: grains & flours
+Foxtail millet | kangni,navane,korralu | 331,12.3,60.1,4.3,6.7 | cup=170 | Raw: grains & flours
+Little millet | kutki,samai | 346,8.9,65.5,2.6,7.7 | cup=170 | Raw: grains & flours
+Kodo millet | kodra,varagu | 331,8.9,66.2,2.6,6.4 | cup=170 | Raw: grains & flours
+Barnyard millet | sanwa,bhagar,vari | 307,6.2,65.5,2.2,10.1 | cup=170 | Raw: grains & flours
+Rajgira | amaranth,ramdana | 371,13.6,65.2,7,6.7 | cup=190 | Raw: grains & flours
+Sabudana raw | sago,tapioca pearls | 351,0.2,87,0.2,0.9 | cup=150;katori=100 | Raw: grains & flours
+Raw oats (steel cut) | steel cut oats | 375,13,67,6.5,10 | cup=160 | Raw: grains & flours
+Corn flour | makki ka atta,maize flour | 361,6.9,76.9,3.9,7.3 | cup=115 | Raw: grains & flours
+Cornflour (starch) | corn starch | 381,0.3,91,0.1,0.9 | tbsp=8 | Raw: grains & flours
+Vermicelli raw | seviyan raw,semiya | 352,12,74,1.3,2.5 | cup=80 | Raw: grains & flours
+Pasta raw | dry pasta,macaroni raw,penne raw | 371,13,75,1.5,3.2 | cup=100 | Raw: grains & flours
+Dalia raw | broken wheat raw,lapsi raw | 342,12,72,1.3,12 | cup=140;katori=100 | Raw: grains & flours
+Quinoa raw | uncooked quinoa | 368,14.1,64.2,6.1,7 | cup=170 | Raw: grains & flours
+# ---------- RAW: dals & legumes ----------
+Toor dal raw | arhar dal raw,tuvar dal uncooked | 343,22.3,57.6,1.7,9 | cup=200;katori=130 | Raw: dals & legumes
+Moong dal raw | yellow moong raw,split moong | 348,24.5,59.9,1.2,8.2 | cup=200;katori=130 | Raw: dals & legumes
+Whole moong raw | green gram,sabut moong | 334,24,56.7,1.3,16.3 | cup=200 | Raw: dals & legumes
+Masoor dal raw | red lentils raw | 343,24.6,59,1.3,10.8 | cup=190 | Raw: dals & legumes
+Urad dal raw | black gram dal,udid dal | 341,24,59.6,1.6,11.9 | cup=200 | Raw: dals & legumes
+Chana dal raw | split bengal gram raw | 360,21,60.5,5.3,15 | cup=200 | Raw: dals & legumes
+Kabuli chana raw | chickpeas raw,safed chana | 364,19.3,61,6,17.4 | cup=200 | Raw: dals & legumes
+Kala chana raw | black chickpeas raw | 360,20.5,57,5.2,25 | cup=200 | Raw: dals & legumes
+Rajma raw | kidney beans raw | 333,22.5,60,1.4,15.2 | cup=185 | Raw: dals & legumes
+Lobia raw | black eyed peas raw,chawli raw | 336,23.5,60,1.3,10.6 | cup=170 | Raw: dals & legumes
+Matki raw | moth beans,matki sprouts raw | 343,23,61.5,1.6,9 | cup=190 | Raw: dals & legumes
+Soybean raw | soya beans | 446,36.5,30.2,19.9,9.3 | cup=186 | Raw: dals & legumes
+Horse gram | kulthi,kulith,hurali | 321,21.7,57.2,0.5,7.9 | cup=190 | Raw: dals & legumes
+Peanuts raw | raw groundnuts | 567,25.8,16.1,49.2,8.5 | handful=30;cup=146 | Raw: dals & legumes
+# ---------- RAW: vegetables ----------
+Raw spinach | palak raw | 23,2.9,3.6,0.4,2.2 | cup=30;bunch=200 | Raw: vegetables
+Methi leaves | fenugreek leaves | 49,4.4,6,0.9,4.9 | cup=40;bunch=100 | Raw: vegetables
+Cauliflower | gobi,phool gobi | 25,1.9,5,0.3,2 | cup=100;piece=600 | Raw: vegetables
+Cabbage raw | patta gobi raw | 25,1.3,5.8,0.1,2.5 | cup=90 | Raw: vegetables
+Capsicum | shimla mirch,bell pepper | 26,1,6,0.3,2.1 | piece=120 | Raw: vegetables
+Brinjal | baingan,eggplant raw,vangi | 25,1,5.9,0.2,3 | piece=250 | Raw: vegetables
+Okra raw | bhindi raw,ladies finger raw | 33,1.9,7.5,0.2,3.2 | cup=100 | Raw: vegetables
+Bottle gourd | lauki raw,dudhi raw | 15,0.6,3.4,0,0.5 | cup=120 | Raw: vegetables
+Bitter gourd | karela | 17,1,3.7,0.2,2.8 | piece=100 | Raw: vegetables
+Ridge gourd | turai,dodka | 20,1.2,4.4,0.2,1.1 | piece=150 | Raw: vegetables
+Pumpkin | kaddu,lal bhopla | 26,1,6.5,0.1,0.5 | cup=116 | Raw: vegetables
+Beetroot | chukandar | 43,1.6,9.6,0.2,2.8 | piece=100 | Raw: vegetables
+Radish | mooli | 16,0.7,3.4,0.1,1.6 | piece=150 | Raw: vegetables
+Green beans raw | french beans raw,farasbi | 31,1.8,7,0.2,3.4 | cup=110 | Raw: vegetables
+Drumstick | moringa pods,shevga | 37,2.1,8.5,0.2,3.2 | piece=50 | Raw: vegetables
+Mushroom raw | button mushroom | 22,3.1,3.3,0.3,1 | cup=70 | Raw: vegetables
+Raw potato | aloo raw | 77,2,17,0.1,2.2 | piece=150 | Raw: vegetables
+Yam | suran,jimikand | 118,1.5,27.9,0.2,4.1 | cup=150 | Raw: vegetables
+Colocasia | arbi,alu | 112,1.5,26.5,0.2,4.1 | piece=40 | Raw: vegetables
+Raw banana (plantain) | kacha kela,plantain | 122,1.3,31.9,0.4,2.3 | piece=150 | Raw: vegetables
+Tinda | apple gourd | 21,1.4,3.4,0.2,1 | piece=60 | Raw: vegetables
+Lettuce | salad leaves | 15,1.4,2.9,0.2,1.3 | cup=36 | Raw: vegetables
+Zucchini | courgette | 17,1.2,3.1,0.3,1 | piece=200 | Raw: vegetables
+Garlic | lahsun | 149,6.4,33,0.5,2.1 | piece=3;tsp=3 | Raw: vegetables
+Ginger | adrak | 80,1.8,17.8,0.8,2 | tsp=3 | Raw: vegetables
+Green chilli | hari mirch | 40,2,9.5,0.2,1.5 | piece=3 | Raw: vegetables
+Coriander leaves | dhania,kothimbir | 23,2.1,3.7,0.5,2.8 | tbsp=4 | Raw: vegetables
+Spring onion | hara pyaz | 32,1.8,7.3,0.2,2.6 | piece=15 | Raw: vegetables
+Baby corn | | 26,2,4,0.3,2 | piece=10 | Raw: vegetables
+Avocado | butter fruit | 160,2,8.5,14.7,6.7 | piece=150 | Fruits
+# ---------- RAW: fruits ----------
+Jamun | java plum,black plum | 62,0.7,15.6,0.2,0.6 | cup=135;piece=5 | Fruits
+Custard apple | sitaphal,sharifa | 94,2.1,23.6,0.3,4.4 | piece=150 | Fruits
+Jackfruit | kathal,phanas | 95,1.7,23.3,0.6,1.5 | cup=165 | Fruits
+Sweet lime | mosambi | 43,0.8,9.3,0.3,1.7 | piece=150 | Fruits
+Plum | aloo bukhara | 46,0.7,11.4,0.3,1.4 | piece=66 | Fruits
+Peach | aadu | 39,0.9,9.5,0.3,1.5 | piece=150 | Fruits
+Cherries | cherry | 63,1.1,16,0.2,2.1 | cup=150 | Fruits
+Dragon fruit | pitaya | 60,1.2,13,0,3 | piece=300 | Fruits
+Fig fresh | anjeer fresh | 74,0.8,19.2,0.3,2.9 | piece=50 | Fruits
+Kokum | | 60,0.5,14,0.1,1 | piece=30 | Fruits
+Ber | indian jujube | 79,1.2,20.2,0.2,0.6 | piece=15 | Fruits
+Star fruit | kamrakh | 31,1,6.7,0.3,2.8 | piece=90 | Fruits
+Lemon | nimbu | 29,1.1,9.3,0.3,2.8 | piece=60 | Fruits
+Apricot dried | khubani | 241,3.4,62.6,0.5,7.3 | piece=8 | Fruits
+Prunes | dried plums | 240,2.2,63.9,0.4,7.1 | piece=10 | Fruits
+Cranberries dried | dried cranberry | 308,0.2,82.4,1.1,5.3 | tbsp=10 | Fruits
+# ---------- MAHARASHTRIAN ----------
+Misal pav | misal | 180,7,22,7,4.5 | plate=350;bowl=250 | Maharashtrian
+Misal (usal only) | usal,matki usal | 150,8,17,5.5,5 | bowl=200 | Maharashtrian
+Kanda poha | kande pohe | 180,3.5,30,5.5,1.6 | plate=200 | Maharashtrian
+Batata poha | aloo poha | 175,3.2,30,5,1.8 | plate=200 | Maharashtrian
+Sabudana vada | sago vada | 310,4,40,15,1.5 | piece=50 | Maharashtrian
+Thalipeeth | thalipith,bhajani thalipeeth | 300,9,40,11,6.5 | piece=80 | Maharashtrian
+Puran poli | puranpoli | 300,7,50,8,4.5 | piece=90 | Maharashtrian
+Zunka | jhunka | 220,10,18,12,5 | bowl=150 | Maharashtrian
+Pithla | pitla,pithla bhakri | 160,7,13,9,3 | bowl=150 | Maharashtrian
+Jowar bhakri | bhakri | 290,8,58,2.5,6.5 | piece=60 | Maharashtrian
+Bajra bhakri | bajri bhakri | 300,8,55,5,8 | piece=60 | Maharashtrian
+Varan bhaat | varan bhat,dal rice maharashtrian | 125,4.5,22,2,1.5 | plate=300 | Maharashtrian
+Varan | maharashtrian dal | 100,6,14,2,2.5 | bowl=150 | Maharashtrian
+Amti | aamti,katachi amti | 95,5,12,3,2.5 | bowl=150 | Maharashtrian
+Masale bhaat | masala bhat | 170,3.5,27,5.5,1.8 | plate=250 | Maharashtrian
+Sol kadhi | solkadhi | 75,1,4,6,0.5 | glass=200 | Maharashtrian
+Kothimbir vadi | kothimbir wadi | 290,8,30,15,5 | piece=30 | Maharashtrian
+Alu vadi | patra,aluchi vadi | 260,6,30,13,5 | piece=30 | Maharashtrian
+Bharli vangi | stuffed brinjal maharashtrian | 140,3,10,10,4 | bowl=150 | Maharashtrian
+Matki usal | moth bean curry | 145,8,17,5,5.5 | bowl=150 | Maharashtrian
+Kolhapuri chicken | chicken kolhapuri,tambda rassa chicken | 165,14,4,10,1 | bowl=200 | Maharashtrian
+Tambda rassa | red mutton gravy | 120,8,3,8.5,0.5 | bowl=200 | Maharashtrian
+Pandhra rassa | white mutton gravy | 130,8,3,9.5,0.5 | bowl=200 | Maharashtrian
+Mutton kolhapuri | kolhapuri mutton | 200,15,4,14,1 | bowl=200 | Maharashtrian
+Kombdi vade | malvani chicken vade | 240,11,22,12,2 | plate=300 | Maharashtrian
+Bombil fry | bombay duck fry | 230,18,8,14,0.3 | piece=40 | Maharashtrian
+Surmai fry | kingfish fry | 210,22,6,11,0.3 | piece=100 | Maharashtrian
+Pomfret fry | paplet fry | 220,20,7,12,0.3 | piece=120 | Maharashtrian
+Prawns koliwada | koliwada prawns | 250,17,13,14,0.8 | plate=150 | Maharashtrian
+Malvani fish curry | konkani fish curry | 130,12,4,7.5,1 | bowl=200 | Maharashtrian
+Modak | ukadiche modak | 230,3,38,7,2.5 | piece=40 | Maharashtrian
+Shrikhand | | 260,6,38,9,0 | katori=100 | Maharashtrian
+Amrakhand | mango shrikhand | 250,5.5,38,8.5,0.3 | katori=100 | Maharashtrian
+Basundi | | 230,7,30,9,0 | katori=100 | Maharashtrian
+Shira | sheera,sooji sheera | 330,4,45,15,1 | katori=100 | Maharashtrian
+Kothimbir chutney | coriander chutney | 60,2,8,2,3 | tbsp=15 | Maharashtrian
+Thecha | mirchi thecha | 180,5,12,13,4 | tbsp=15 | Maharashtrian
+Shengdana chutney | peanut chutney dry | 520,22,20,40,8 | tbsp=10 | Maharashtrian
+Sabudana khichadi with peanuts | upvas khichdi | 240,4,36,9,1.5 | plate=200 | Maharashtrian
+Dabeli | kutchi dabeli | 230,5,35,8,3 | piece=120 | Street food
+Ragda pattice | ragda patties | 180,5,25,7,4 | plate=250 | Street food
+Sev puri | | 280,5,32,15,3 | plate=150 | Street food
+Dahi puri | | 200,5,25,8,2.5 | plate=180 | Street food
+Bombay sandwich | mumbai veg sandwich | 210,5,30,8,3 | piece=170 | Street food
+Bun maska | maska pav | 360,7,48,15,2 | piece=80 | Street food
+Kanda bhaji | onion pakoda | 310,6,28,19,3 | piece=25;plate=150 | Street food
+Batata vada | aloo vada | 270,4.5,30,15,2.5 | piece=70 | Street food
+Frankie veg | veg roll | 230,6,32,9,3 | piece=180 | Street food
+Egg frankie | egg roll | 240,9,26,11,2 | piece=200 | Street food
+# ---------- NORTH INDIAN / PUNJABI ----------
+Shahi paneer | | 240,9,9,19,1.2 | bowl=150 | North Indian
+Paneer lababdar | | 235,9,10,18,1.3 | bowl=150 | North Indian
+Malai kofta | | 260,6,15,20,2 | bowl=150 | North Indian
+Dum aloo | kashmiri dum aloo | 150,2.5,16,8.5,2.2 | bowl=150 | North Indian
+Aloo matar | | 110,3,14,5,3.2 | bowl=150 | North Indian
+Mix veg curry | mixed vegetable curry | 105,2.8,10,6,3 | bowl=150 | North Indian
+Navratan korma | | 190,5,14,13,2.5 | bowl=150 | North Indian
+Chana masala dry | amritsari chole | 180,8,22,7,6 | bowl=150 | North Indian
+Dal tadka dhaba | dhaba dal | 120,6,15,4,3 | bowl=150 | North Indian
+Rajma chawal combo | | 140,5,24,3,2.5 | plate=350 | Combos & thalis
+Kadhi chawal | kadhi rice | 115,3.2,18,3.3,0.7 | plate=350 | Combos & thalis
+Chole kulche | kulche chole | 230,7,32,8,4 | plate=300 | Combos & thalis
+Amritsari kulcha | stuffed kulcha | 290,7,42,10,2.5 | piece=120 | North Indian
+Lachha paratha | laccha paratha | 330,7,45,14,3 | piece=80 | North Indian
+Makki di roti | makki roti | 290,6,48,8,6 | piece=70 | North Indian
+Sarson ka saag with makki roti | saag makki | 170,5,20,8,4.5 | plate=300 | Combos & thalis
+Baingan masala | | 110,2,9,7.5,3 | bowl=150 | North Indian
+Paneer do pyaza | | 220,10,8,17,1.5 | bowl=150 | North Indian
+Mushroom matar | | 100,4,9,5.5,3 | bowl=150 | North Indian
+Chicken tikka masala | | 175,14,6,11,1 | bowl=200 | North Indian
+Kadai chicken | karahi chicken | 170,15,5,10,1.2 | bowl=200 | North Indian
+Chicken changezi | | 210,15,5,15,0.8 | bowl=200 | North Indian
+Chicken korma | | 200,14,6,13,0.8 | bowl=200 | North Indian
+Rogan josh | mutton rogan josh | 190,15,4,13,1 | bowl=200 | North Indian
+Afghani chicken | chicken afghani | 200,20,3,12,0.3 | piece=150 | North Indian
+Reshmi kebab | chicken reshmi kebab | 210,20,4,13,0.3 | piece=40 | North Indian
+Mutton seekh kebab | lamb seekh | 260,17,4,20,0.5 | piece=40 | North Indian
+Galouti kebab | | 280,15,8,21,1 | piece=40 | North Indian
+Fish tikka | | 160,22,3,6.5,0.3 | piece=40 | North Indian
+Paneer pakora | | 300,12,16,21,1.5 | piece=30 | North Indian
+Aloo tikki | | 210,3,26,10,2.5 | piece=60 | Street food
+Chole tikki chaat | tikki chaat | 190,5,26,7,4 | plate=200 | Street food
+Papdi chaat | | 250,6,30,12,3 | plate=150 | Street food
+Dahi bhalla | dahi vada | 170,6,20,7,2 | piece=80;plate=200 | Street food
+Raj kachori | | 280,7,33,13,4 | piece=150 | Street food
+Golgappa water | pani puri pani | 15,0.2,3.5,0,0.3 | glass=100 | Street food
+Kulfi | malai kulfi | 230,6,24,12,0 | piece=60 | Sweets
+Rabri | rabdi | 250,7,28,12,0 | katori=100 | Sweets
+Gajar halwa | carrot halwa,gajar ka halwa | 230,4,30,11,2.5 | katori=100 | Sweets
+Moong dal halwa | | 430,7,45,25,2.5 | katori=100 | Sweets
+Kaju katli | kaju barfi | 500,9,55,27,1.5 | piece=15 | Sweets
+Barfi | milk barfi | 420,9,55,18,0 | piece=25 | Sweets
+Peda | mathura peda | 380,9,58,12,0 | piece=25 | Sweets
+Motichoor ladoo | boondi ladoo | 450,6,60,21,1.5 | piece=35 | Sweets
+Rasmalai | ras malai | 210,6,25,10,0 | piece=60 | Sweets
+Kalakand | | 380,13,45,17,0 | piece=40 | Sweets
+Soan papdi | son papdi | 520,5,62,28,1.5 | piece=25 | Sweets
+Malpua | | 360,5,45,18,1 | piece=50 | Sweets
+Imarti | | 420,3,62,18,0.5 | piece=40 | Sweets
+Phirni | firni | 160,4,24,5,0.3 | katori=100 | Sweets
+Seviyan kheer | vermicelli kheer,sheer khurma | 180,4.5,26,6.5,0.5 | katori=120 | Sweets
+Shakarpara | | 480,6,62,23,2 | handful=30 | Snacks
+Mathri | | 500,8,52,29,2.5 | piece=15 | Snacks
+# ---------- SOUTH INDIAN ----------
+Rava idli | sooji idli | 180,5,28,5,1.5 | piece=55 | South Indian
+Mysore masala dosa | | 210,4.5,29,8.5,2 | piece=200 | South Indian
+Set dosa | | 180,4,31,4.5,1.6 | piece=70 | South Indian
+Neer dosa | | 150,2.5,30,2,0.5 | piece=50 | South Indian
+Paper dosa | | 190,4,30,6,1.5 | piece=90 | South Indian
+Onion uttapam | | 165,4.5,25,5,2 | piece=130 | South Indian
+Pesarattu | green moong dosa | 170,9,22,5,4.5 | piece=90 | South Indian
+Adai | adai dosa | 200,9,28,6,5 | piece=90 | South Indian
+Ragi dosa | nachni dosa | 170,4.5,28,4.5,4 | piece=80 | South Indian
+Bisi bele bath | bisibelebath | 150,4.5,23,4.5,2.5 | plate=250 | South Indian
+Curd vada | thayir vadai | 180,6,17,9.5,2 | piece=90 | South Indian
+Sambar vada | | 170,6,17,8.5,3 | plate=200 | South Indian
+Rasam | | 35,1,5,1.2,0.6 | bowl=150 | South Indian
+Tomato rasam | | 40,1,5.5,1.5,0.7 | bowl=150 | South Indian
+Avial | aviyal | 120,2.5,9,8.5,3 | bowl=150 | South Indian
+Thoran | cabbage thoran,beans thoran | 110,2.5,9,7,3.5 | bowl=120 | South Indian
+Kootu | | 110,5,12,4.5,3.5 | bowl=150 | South Indian
+Poriyal | beans poriyal | 95,2.5,9,5.5,3.5 | bowl=120 | South Indian
+Puliyogare | tamarind rice,puliyodarai | 190,3,30,6.5,1.5 | plate=200 | South Indian
+Tomato rice | thakkali sadam | 165,3,28,4.5,1.5 | plate=200 | South Indian
+Coconut rice | thengai sadam | 210,3,30,8.5,2.5 | plate=200 | South Indian
+Kerala parotta | malabar parotta,porotta | 330,7,46,13,1.8 | piece=90 | South Indian
+Idiyappam | string hoppers | 150,2.8,33,0.5,0.6 | piece=40 | South Indian
+Puttu | kerala puttu | 180,3.5,38,1.5,2 | piece=100 | South Indian
+Kadala curry | kerala chana curry | 150,7,17,6,5.5 | bowl=150 | South Indian
+Kerala fish curry | meen curry kerala | 140,13,4,8,1 | bowl=200 | South Indian
+Kerala chicken stew | chicken ishtu | 130,10,6,7.5,1 | bowl=200 | South Indian
+Chettinad chicken | chicken chettinad | 190,15,5,12.5,1.5 | bowl=200 | South Indian
+Chicken 65 dry | | 250,18,10,15,0.8 | plate=150 | South Indian
+Pepper chicken | chicken pepper fry | 210,20,4,13,1 | plate=150 | South Indian
+Beef fry kerala | beef ularthiyathu | 240,22,4,15,1 | plate=150 | South Indian
+Hyderabadi chicken biryani | dum biryani | 190,9,22,7,1 | plate=350 | Hyderabadi & Mughlai
+Hyderabadi mutton biryani | | 210,10,21,9.5,1 | plate=350 | Hyderabadi & Mughlai
+Haleem | | 160,10,14,7,2.5 | bowl=250 | Hyderabadi & Mughlai
+Mirchi ka salan | | 160,3,9,12.5,3 | bowl=150 | Hyderabadi & Mughlai
+Double ka meetha | | 330,6,42,15,1 | katori=100 | Hyderabadi & Mughlai
+Qubani ka meetha | | 260,2,58,2.5,4 | katori=100 | Hyderabadi & Mughlai
+Mutton nihari | nihari | 180,13,5,12,1 | bowl=250 | Hyderabadi & Mughlai
+Chicken shawarma plate | | 190,14,15,8,1.5 | plate=300 | Hyderabadi & Mughlai
+Payasam | semiya payasam | 170,4,26,5.5,0.5 | katori=120 | Sweets
+Mysore pak | | 520,6,48,34,2 | piece=30 | Sweets
+Banana chips | kerala chips | 520,2.3,58,32,4.5 | handful=25 | Snacks
+Murukku | chakli | 520,8,55,30,3.5 | piece=15;handful=30 | Snacks
+Unniyappam | | 300,3.5,48,10,2 | piece=25 | Sweets
+Filter coffee south | south indian filter coffee | 55,2,7,2,0 | cup=150 | Drinks
+# ---------- GUJARATI / RAJASTHANI ----------
+Undhiyu | | 170,4.5,16,10,5 | bowl=150 | Gujarati & Rajasthani
+Handvo | | 210,7,26,8.5,3.5 | piece=80 | Gujarati & Rajasthani
+Khandvi | | 190,7,18,10,2 | piece=20;plate=120 | Gujarati & Rajasthani
+Fafda | | 520,13,45,32,4 | piece=20;plate=100 | Gujarati & Rajasthani
+Gathiya | | 540,14,45,34,4 | handful=30 | Gujarati & Rajasthani
+Khaman | | 160,7,23,4.5,2 | piece=35 | Gujarati & Rajasthani
+Gujarati dal | khatti meethi dal | 95,4.5,14,2.5,2 | bowl=150 | Gujarati & Rajasthani
+Gujarati kadhi | | 85,3,9,4.5,0.5 | bowl=150 | Gujarati & Rajasthani
+Sev tameta | sev tamatar | 190,5,16,12,3 | bowl=150 | Gujarati & Rajasthani
+Muthiya | methi muthia | 240,7,30,10,5 | piece=30 | Gujarati & Rajasthani
+Dal baati churma | dal bati | 380,10,45,18,6 | plate=300 | Gujarati & Rajasthani
+Baati | bati | 400,9,55,16,5 | piece=70 | Gujarati & Rajasthani
+Churma | | 480,7,60,24,4 | katori=80 | Gujarati & Rajasthani
+Gatte ki sabzi | besan gatte | 190,7,15,11.5,3.5 | bowl=150 | Gujarati & Rajasthani
+Ker sangri | | 180,5,15,11,8 | bowl=120 | Gujarati & Rajasthani
+Laal maas | rajasthani mutton | 220,15,4,16,1 | bowl=200 | Gujarati & Rajasthani
+Pyaz kachori | onion kachori | 420,7,42,25,3 | piece=60 | Gujarati & Rajasthani
+Ghevar | | 450,5,55,24,0.5 | piece=60 | Gujarati & Rajasthani
+Mohanthal | | 480,9,48,28,3 | piece=30 | Gujarati & Rajasthani
+Gujarati thali | gujju thali | 160,5,24,5,3 | plate=700 | Combos & thalis
+Rajasthani thali | | 190,6,25,7.5,4 | plate=700 | Combos & thalis
+# ---------- BENGALI / EAST ----------
+Machher jhol | bengali fish curry | 120,12,4,6.5,0.8 | bowl=200 | Bengali & East
+Shorshe ilish | hilsa mustard | 260,17,3,20,1 | piece=120 | Bengali & East
+Chingri malai curry | prawn malai curry | 180,12,5,12.5,1 | bowl=200 | Bengali & East
+Kosha mangsho | bengali mutton | 220,16,5,15,1 | bowl=200 | Bengali & East
+Aloo posto | | 160,4,16,9.5,2.5 | bowl=150 | Bengali & East
+Shukto | | 100,2.5,10,5.5,3 | bowl=150 | Bengali & East
+Cholar dal | bengali chana dal | 140,7,19,4,4 | bowl=150 | Bengali & East
+Luchi | | 380,7,45,19,1.5 | piece=20 | Bengali & East
+Kathi roll kolkata | kolkata roll | 260,11,28,11.5,1.8 | piece=200 | Bengali & East
+Sandesh | | 330,12,48,10,0 | piece=30 | Bengali & East
+Mishti doi | sweet curd | 140,4,22,4,0 | katori=100 | Bengali & East
+Rasgulla sponge | rosogolla sponge | 186,4,37,2.5,0 | piece=50 | Bengali & East
+Chhena poda | | 320,11,40,13,0 | piece=60 | Bengali & East
+Litti chokha | litti | 250,8,38,7,6 | piece=90;plate=300 | Bengali & East
+Momos fried | fried momos | 260,7,28,13,1.5 | piece=30 | Bengali & East
+Thukpa | | 70,4,9,2,1 | bowl=350 | Bengali & East
+# ---------- GOAN / COASTAL ----------
+Goan fish curry | | 130,12,4,7.5,1 | bowl=200 | Goan & Coastal
+Chicken xacuti | | 190,14,6,12.5,2 | bowl=200 | Goan & Coastal
+Pork vindaloo | vindaloo | 220,16,4,15.5,1 | bowl=200 | Goan & Coastal
+Chicken cafreal | | 190,20,3,11,0.8 | piece=150 | Goan & Coastal
+Prawn balchao | | 210,14,7,14,1 | bowl=120 | Goan & Coastal
+Fish recheado | | 220,19,5,13.5,0.5 | piece=120 | Goan & Coastal
+Goan pao | poi | 270,9,52,3,3 | piece=60 | Goan & Coastal
+Bebinca | | 380,5,45,20,0.5 | piece=60 | Goan & Coastal
+Mangalorean chicken ghee roast | ghee roast | 260,18,5,19,1 | bowl=150 | Goan & Coastal
+Kori rotti | | 160,8,18,6,1 | plate=300 | Goan & Coastal
+# ---------- INDO-CHINESE ----------
+Chicken fried rice | | 185,7,25,6.5,1 | plate=300 | Indo-Chinese
+Egg fried rice | | 175,5.5,26,5.5,1 | plate=300 | Indo-Chinese
+Schezwan fried rice | | 180,4,28,6,1.2 | plate=300 | Indo-Chinese
+Veg hakka noodles | hakka noodles veg | 170,4,25,6,1.8 | plate=300 | Indo-Chinese
+Chicken hakka noodles | chicken noodles | 185,8,24,6.5,1.5 | plate=300 | Indo-Chinese
+Schezwan noodles | | 190,4,27,7.5,1.8 | plate=300 | Indo-Chinese
+Chilli paneer | | 250,12,12,17,1.5 | plate=200 | Indo-Chinese
+Gobi manchurian dry | | 210,4,22,12,2.5 | plate=200 | Indo-Chinese
+Chicken manchurian | | 190,13,12,10,1 | bowl=200 | Indo-Chinese
+Chilli potato | honey chilli potato | 280,3.5,36,14,2.5 | plate=180 | Indo-Chinese
+Spring rolls veg | veg spring roll | 260,5,30,13,2.5 | piece=60 | Indo-Chinese
+Hot and sour soup | | 45,2,6,1.5,0.8 | bowl=250 | Indo-Chinese
+Manchow soup | | 55,2,7,2,1 | bowl=250 | Indo-Chinese
+Sweet corn soup | | 60,2,10,1.5,0.8 | bowl=250 | Indo-Chinese
+Chicken clear soup | | 25,3.5,1.5,0.6,0.3 | bowl=250 | Indo-Chinese
+Chicken lollipop | | 260,18,10,17,0.5 | piece=35 | Indo-Chinese
+Dragon chicken | | 240,15,15,13,1 | plate=200 | Indo-Chinese
+American chopsuey | | 210,5,28,9,1.5 | plate=300 | Indo-Chinese
+Chicken momos steamed | chicken dumplings | 170,9,21,5,1 | piece=30 | Indo-Chinese
+Paneer momos | | 180,8,22,7,1.2 | piece=30 | Indo-Chinese
+Momo chutney | red chutney | 80,1.5,10,4,2 | tbsp=15 | Indo-Chinese
+Chowmein street | street chowmein | 200,4.5,28,8,1.8 | plate=250 | Indo-Chinese
+Triple schezwan rice | | 210,5,30,8,1.5 | plate=400 | Indo-Chinese
+# ---------- COMBOS & THALIS ----------
+Veg thali | north indian veg thali | 155,4.5,22,5.5,3 | plate=650 | Combos & thalis
+Non-veg thali | chicken thali | 170,8,20,6.5,2 | plate=700 | Combos & thalis
+South Indian meals | south meals,meals | 140,4,24,3.5,2.5 | plate=700 | Combos & thalis
+Maharashtrian thali | | 160,5,24,5,3 | plate=650 | Combos & thalis
+Roti sabzi | 2 roti with sabzi | 200,5.5,30,7,4 | plate=250 | Combos & thalis
+Dal roti | | 180,7,28,4.5,4 | plate=300 | Combos & thalis
+Idli sambar | | 105,3.5,19,1.5,2 | plate=250 | Combos & thalis
+Dosa with sambar and chutney | dosa combo | 150,3.8,22,5.5,2.5 | plate=350 | Combos & thalis
+Poha with tea | | 120,2.6,20,3.6,1 | plate=350 | Combos & thalis
+Paratha with curd | | 220,6,28,9,2.5 | plate=250 | Combos & thalis
+Aloo paratha with butter | | 290,5.5,34,15,3 | piece=140 | Combos & thalis
+Egg curry rice | | 140,5.5,19,4.5,0.8 | plate=350 | Combos & thalis
+Chicken curry rice | | 140,7.5,17,4.5,0.6 | plate=400 | Combos & thalis
+Fish curry rice | | 125,7,18,3,0.6 | plate=400 | Combos & thalis
+Curd rice with pickle | | 135,3.5,20,4.5,0.6 | plate=250 | Combos & thalis
+Pav bhaji plate | pav bhaji with 2 pav | 200,5,28,8,3 | plate=350 | Combos & thalis
+Chole bhature plate | | 260,7,32,12,3.5 | plate=350 | Combos & thalis
+Biryani with raita | | 170,7,20,6.5,1 | plate=400 | Combos & thalis
+# ---------- BREAKFAST / OTHERS ----------
+Bread omelette | | 210,10,20,10,1.2 | plate=180 | Breakfast
+Bread butter | | 340,7,44,15,2.2 | slice=30 | Breakfast
+Bread jam | | 290,6,58,3,2 | slice=35 | Breakfast
+Peanut butter toast | pb toast | 360,12,38,18,4.5 | slice=45 | Breakfast
+Masala oats | | 95,3.5,15,2.5,2.5 | bowl=250 | Breakfast
+Overnight oats | | 130,5.5,19,3.5,2.5 | bowl=250 | Breakfast
+Egg sandwich | | 220,11,24,9,1.8 | piece=150 | Breakfast
+Paneer sandwich | | 250,11,25,12,2 | piece=160 | Breakfast
+Chicken salad | grilled chicken salad | 110,14,4,4,1.5 | bowl=250 | Breakfast
+Fruit salad | | 60,0.8,15,0.3,2 | bowl=200 | Breakfast
+Upma with chutney | | 170,4,23,7,2.5 | plate=250 | Breakfast
+Granola | | 470,10,64,20,6 | cup=60;tbsp=10 | Breakfast
+Pancake | pancakes | 227,6,28,10,1 | piece=60 | Breakfast
+Boiled egg whites (6) | | 52,10.9,0.7,0.2,0 | piece=33 | Eggs, meat & fish
+Scrambled eggs | | 150,10,1.5,11,0 | plate=120 | Eggs, meat & fish
+Egg masala | anda masala | 170,9,5,13,1 | bowl=150 | Eggs, meat & fish
+Chicken keema | chicken mince curry | 170,16,4,10,1 | bowl=150 | Eggs, meat & fish
+Chicken soup | | 40,4,3,1.5,0.3 | bowl=250 | Eggs, meat & fish
+Tandoori fish | | 150,22,3,5.5,0.3 | piece=120 | Eggs, meat & fish
+Mutton chops | | 260,20,3,19,0.5 | piece=60 | Eggs, meat & fish
+Chicken liver fry | kaleji | 180,20,4,9,0.5 | bowl=120 | Eggs, meat & fish
+Crab curry | | 110,12,4,5,0.8 | bowl=200 | Eggs, meat & fish
+Squid fry | calamari | 230,16,10,14,0.4 | plate=120 | Eggs, meat & fish
+Chicken breast raw (skinless) | raw chicken | 120,22.5,0,2.6,0 | piece=170 | Eggs, meat & fish
+Chicken drumstick | chicken leg | 172,28,0,5.7,0 | piece=70 | Eggs, meat & fish
+Lean mutton raw | raw goat meat | 122,21,0,3.6,0 | piece=100 | Eggs, meat & fish
+Egg bhurji pav | | 230,10,24,10,1.5 | plate=200 | Street food
+# ---------- DAIRY extras ----------
+Paneer raw low fat | toned milk paneer | 200,22,4,11,0 | piece=20 | Dairy
+Cottage cheese (western) | | 98,11.1,3.4,4.3,0 | cup=225 | Dairy
+Buffalo milk | bhains ka doodh | 117,4.5,5.2,8.8,0 | glass=250 | Dairy
+Almond milk | unsweetened almond milk | 17,0.6,0.6,1.3,0.3 | glass=250 | Dairy
+Soy milk | soya milk | 54,3.3,6,1.8,0.6 | glass=250 | Dairy
+Flavoured milk | chocolate milk,badam milk | 85,3,12,2.8,0.3 | glass=200 | Dairy
+Masala chaas | spiced buttermilk | 30,1.6,3,1.2,0.1 | glass=250 | Dairy
+Protein curd | high protein curd,skyr | 70,10,4,1.5,0 | cup=200 | Dairy
+Mozzarella | pizza cheese | 280,28,3.1,17,0 | slice=25 | Dairy
+Fresh cream | malai,cream | 340,2,3,35,0 | tbsp=15 | Dairy
+Khoya | mawa | 420,15,25,30,0 | tbsp=20 | Dairy
+Condensed milk | milkmaid | 321,8,54,8.7,0 | tbsp=20 | Dairy
+# ---------- DRINKS ----------
+Masala chai no sugar | tea without sugar | 25,1.5,2.5,1.2,0 | cup=150 | Drinks
+Black tea | | 1,0,0.3,0,0 | cup=200 | Drinks
+Lemon tea | | 15,0,4,0,0 | cup=200 | Drinks
+Turmeric milk | haldi doodh | 75,3.2,6,4,0.2 | glass=200 | Drinks
+Mango lassi | | 110,3,19,2.5,0.3 | glass=250 | Drinks
+Salted lassi | namkeen lassi | 50,3,4,2.5,0 | glass=250 | Drinks
+Jaljeera | | 15,0.2,4,0,0.3 | glass=250 | Drinks
+Aam panna | | 60,0.2,15,0,0.3 | glass=250 | Drinks
+Kokum sharbat | | 55,0.1,14,0,0.1 | glass=250 | Drinks
+Rooh afza milk | | 100,3,16,2.8,0 | glass=250 | Drinks
+Thandai | | 140,4,20,5,0.5 | glass=200 | Drinks
+Badam milk | | 120,4,15,5,0.6 | glass=200 | Drinks
+Fresh lime soda sweet | | 35,0,9,0,0 | glass=300 | Drinks
+Watermelon juice | | 30,0.6,7.5,0.2,0.4 | glass=250 | Drinks
+Pomegranate juice | anar juice | 54,0.2,13,0.3,0.1 | glass=250 | Drinks
+Apple juice | | 46,0.1,11.3,0.1,0.2 | glass=250 | Drinks
+Coconut milk | | 230,2.3,6,24,2.2 | tbsp=15;cup=240 | Drinks
+Energy drink | red bull,monster | 45,0,11,0,0 | can=250 | Drinks
+Protein shake water | whey in water | 117,23.4,2.4,1.8,0.3 | glass=300 | Drinks
+Smoothie banana oats | banana smoothie | 95,4,15,2.5,1.5 | glass=350 | Drinks
+Whisky | rum,vodka,gin | 250,0,0,0,0 | peg=30 | Drinks
+Wine | red wine,white wine | 85,0.1,2.6,0,0 | glass=150 | Drinks
+# ---------- SNACKS / PACKAGED ----------
+Kurkure | | 540,6,57,32,2 | packet=30 | Snacks
+Bhujia sev | sev | 560,15,40,38,5 | handful=25 | Snacks
+Masala peanuts | coated peanuts | 520,18,35,34,6 | handful=30 | Snacks
+Chikki | peanut chikki,gur chikki | 480,13,52,25,4 | piece=25 | Snacks
+Dry fruit ladoo | | 420,9,50,21,6 | piece=30 | Snacks
+Protein cookie | | 420,25,45,16,6 | piece=60 | Snacks
+Rice cake | | 387,8,82,2.8,4 | piece=9 | Snacks
+Trail mix | | 480,13,45,29,6 | handful=35 | Snacks
+Dhokla packaged | | 170,6,26,4.5,2 | piece=35 | Snacks
+Sprouts chaat | | 70,5,11,0.8,3 | bowl=150 | Snacks
+Corn chaat | bhutta chaat | 110,3.5,20,2.5,2.5 | bowl=150 | Snacks
+Roasted foxnuts masala | masala makhana | 420,9,65,13,12 | handful=15 | Snacks
+Baked chips | | 440,7,72,14,5 | packet=50 | Snacks
+Instant cup noodles | cup noodles | 450,9,60,19,2.5 | packet=70 | Snacks
+Oats cookies | | 450,7,64,19,5 | piece=15 | Snacks
+Dark chocolate 85% | | 600,10,30,50,13 | piece=10 | Sweets
+Muesli bar | granola bar | 420,7,63,15,6 | piece=35 | Snacks
+# ---------- FAST FOOD (India, typical) ----------
+Veg burger | aloo tikki burger | 240,6,34,9,2.5 | piece=150 | Fast food
+Paneer burger | | 260,9,30,12,2 | piece=180 | Fast food
+Chicken nuggets | | 290,15,17,18,1 | piece=17 | Fast food
+Fried chicken | kfc chicken | 270,18,10,18,0.5 | piece=120 | Fast food
+Chicken wrap | | 230,12,25,9,1.8 | piece=220 | Fast food
+Subway chicken sub | chicken sub | 180,11,23,4.5,2.5 | piece=230 | Fast food
+Veg pizza | | 240,9,32,8.5,2.5 | slice=110 | Fast food
+Chicken pizza | | 255,12,30,10,2 | slice=115 | Fast food
+Garlic bread | | 350,8,42,16,2 | piece=40 | Fast food
+White sauce pasta | | 180,5,22,8,1.2 | plate=300 | Fast food
+Red sauce pasta | arrabbiata | 140,4.5,23,3.5,2 | plate=300 | Fast food
+Chicken pasta | | 170,10,20,6,1.2 | plate=300 | Fast food
+Fries peri peri | peri peri fries | 320,3.5,41,16,3.8 | plate=120 | Fast food
+Shawarma roll | | 220,12,22,9.5,1.5 | piece=250 | Fast food
+Burrito bowl chicken | | 150,11,17,4.5,3.5 | bowl=400 | Fast food
+Hot dog | | 290,10,24,17,1 | piece=100 | Fast food
+Sushi | california roll | 145,4,26,3,1.2 | piece=30 | Fast food
+Brownie | | 466,6,57,24,2.5 | piece=60 | Sweets
+Doughnut | donut | 452,5,51,25,1.7 | piece=60 | Sweets
+Cheesecake | | 321,5.5,25.5,22.5,0.4 | slice=100 | Sweets
+Waffle | | 291,8,33,14,1.5 | piece=75 | Sweets
+Milkshake chocolate | chocolate shake | 120,3.5,18,4,0.5 | glass=350 | Drinks

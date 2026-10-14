@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import UIKit
 
 /// Shows what the parser understood so you can fix quantities, units or matches before saving.
 struct FoodReviewSheet: View {
@@ -55,11 +56,7 @@ struct FoodReviewSheet: View {
                             .foregroundStyle(Theme.textSecondary)
                     }
 
-                    Button("Save to \(meal)") {
-                        FoodLogStore.save(items, meal: meal, context: context, learned: learned)
-                        Haptics.success()
-                        dismiss()
-                    }
+                    Button("Save to \(meal)") { save() }
                     .buttonStyle(.primary)
                     .disabled(!items.contains(where: \.isMatched))
                 }
@@ -70,6 +67,18 @@ struct FoodReviewSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") { save() }
+                        .fontWeight(.bold)
+                        .disabled(!items.contains(where: \.isMatched))
+                }
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
+                    .fontWeight(.bold)
+                }
             }
             .sheet(item: Binding(get: { addingFor.map(IDBox.init) }, set: { addingFor = $0?.id })) { box in
                 AddFoodSheet(suggestedName: items.first { $0.id == box.id }?.query ?? "") { newFood in
@@ -96,6 +105,18 @@ struct FoodReviewSheet: View {
 }
 
 private struct IDBox: Identifiable { let id: UUID }
+
+extension FoodReviewSheet {
+    func save() {
+        // Make sure a number still being typed is applied before saving.
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        DispatchQueue.main.async {
+            FoodLogStore.save(items, meal: meal, context: context, learned: learned)
+            Haptics.success()
+            dismiss()
+        }
+    }
+}
 
 private struct ParsedRow: View {
     @Binding var item: ParsedFood
@@ -193,7 +214,7 @@ private struct ParsedRow: View {
                             .frame(width: 58)
                             .focused($gramsFocused)
                             .onSubmit(commitGrams)
-                            .onChange(of: gramsFocused) { _, focused in if !focused { commitGrams() } }
+                            .onChange(of: gramsFocused) { _, focused in if !focused { commitGrams(); syncText() } }
                         Text("G").font(.display(16)).foregroundStyle(Theme.textSecondary)
                     }
                     .padding(.horizontal, 8)
@@ -202,7 +223,7 @@ private struct ParsedRow: View {
                 }
 
                 let m = FoodLogStore.macros(for: item, learned: learned)
-                Text("\(Int(m.kcal)) kcal · P \(Int(m.protein)) · C \(Int(m.carbs)) · F \(Int(m.fat))"
+                Text("\(Int(m.kcal)) kcal · P \(Int(m.protein)) · C \(Int(m.carbs)) · F \(Int(m.fat)) · Fib \(Int(m.fiber))"
                      + (item.gramsOverride != nil && !["g", "ml"].contains(item.unit) ? "  · will remember \(Fmt.weight(item.gramsOverride! / max(item.qty, 0.01))) g per \(item.unit)" : ""))
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Theme.textSecondary)
@@ -214,11 +235,14 @@ private struct ParsedRow: View {
             }
         }
         .cardStyle(padding: 14)
-        .onAppear { gramsText = Fmt.weight((grams * 10).rounded() / 10) }
-        .onChange(of: item.qty) { _, _ in gramsText = Fmt.weight((grams * 10).rounded() / 10) }
-        .onChange(of: item.unit) { _, _ in gramsText = Fmt.weight((grams * 10).rounded() / 10) }
-        .onChange(of: item.food?.id) { _, _ in gramsText = Fmt.weight((grams * 10).rounded() / 10) }
+        .onAppear { syncText() }
+        .onChange(of: gramsText) { _, _ in if gramsFocused { commitGrams() } }
+        .onChange(of: item.qty) { _, _ in if !gramsFocused { syncText() } }
+        .onChange(of: item.unit) { _, _ in syncText() }
+        .onChange(of: item.food?.id) { _, _ in syncText() }
     }
+
+    private func syncText() { gramsText = Fmt.weight((grams * 10).rounded() / 10) }
 
     private var qtyStep: Double { ["g", "ml"].contains(item.unit) ? 10 : 0.5 }
 
