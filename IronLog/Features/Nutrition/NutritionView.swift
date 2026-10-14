@@ -288,6 +288,7 @@ struct NutritionView: View {
             }
             .buttonStyle(.primary)
             .disabled(text.trimmingCharacters(in: .whitespaces).isEmpty)
+        }
         .cardStyle()
     }
 
