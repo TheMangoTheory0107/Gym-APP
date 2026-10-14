@@ -182,11 +182,8 @@ struct ActiveWorkoutView: View {
             }
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            VStack(spacing: 0) {
-                SpotifyBar()
-                RestTimerBar()
-                    .animation(.snappy, value: restTimer.isRunning)
-            }
+            RestTimerBar()
+                .animation(.snappy, value: restTimer.isRunning)
         }
     }
 

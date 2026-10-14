@@ -1,4 +1,3 @@
-import AuthenticationServices
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
@@ -6,8 +5,6 @@ import UniformTypeIdentifiers
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
-    @Environment(\.webAuthenticationSession) private var webAuth
-    private var spotify = Spotify.shared
 
     @AppStorage(ProfileKey.heightCm) private var heightCm = ProfileDefault.heightCm
     @AppStorage(ProfileKey.kcalTarget) private var kcalTarget = ProfileDefault.kcal
@@ -59,22 +56,6 @@ struct SettingsView: View {
                 Section {
                     numberRow("Daily water", value: $waterTarget, unit: "ml", step: 250)
                 } header: { header("Water") }
-
-                if Spotify.isAvailable {
-                    Section {
-                        if spotify.isConnected {
-                            Label("Spotify connected", systemImage: "checkmark.circle.fill").foregroundStyle(Theme.accent)
-                            Button("Disconnect", role: .destructive) { spotify.disconnect() }
-                        } else {
-                            Button("Connect Spotify") { Task { await connectSpotify() } }
-                        }
-                        if let message = spotify.message {
-                            Text(message).font(.footnote).foregroundStyle(Theme.ember)
-                        }
-                    } header: { header("Music (optional)") } footer: {
-                        Text("Control your music from the workout screen. Needs Spotify Premium.")
-                    }
-                }
 
                 Section {
                     Toggle("Connect Apple Health", isOn: $healthSync)
@@ -228,13 +209,6 @@ struct SettingsView: View {
                     .monospacedDigit()
             }
         }
-    }
-
-    private func connectSpotify() async {
-        guard let url = spotify.authorizeURL(),
-              let callback = try? await webAuth.authenticate(using: url, callbackURLScheme: "ironlog",
-                                                             preferredBrowserSession: .ephemeral) else { return }
-        await spotify.finishLogin(callback: callback)
     }
 
     private func connectHealth() async {
