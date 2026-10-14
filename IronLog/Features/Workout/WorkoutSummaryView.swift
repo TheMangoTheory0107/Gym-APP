@@ -79,6 +79,7 @@ struct WorkoutSummaryView: View {
             .padding(.horizontal, Theme.gutter)
             .padding(.bottom, 32)
         }
+        .overlay { CelebrationBurst().ignoresSafeArea() }
         .onAppear {
             appeared = true
             if !summary.records.isEmpty { Haptics.success() }

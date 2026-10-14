@@ -13,6 +13,7 @@ struct ActiveWorkoutView: View {
     @State private var confirmDiscard = false
     @State private var summary: WorkoutSummary?
     @State private var showPicker = false
+    @AppStorage("workout.listMode") private var listMode = false
 
     private var restTimer = RestTimer.shared
 
@@ -39,6 +40,75 @@ struct ActiveWorkoutView: View {
     }
 
     private var workout: some View {
+        Group {
+            if listMode {
+                listView
+            } else {
+                GuidedWorkoutView(model: model,
+                                  onInfo: { detailExercise = $0 },
+                                  onAddExercise: { showPicker = true },
+                                  onFinish: { finish() })
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 17, weight: .bold))
+                        .frame(width: 44, height: 44)
+                }
+                .accessibilityLabel("Minimise workout")
+            }
+            ToolbarItem(placement: .principal) {
+                VStack(spacing: 0) {
+                    Text(model.session.dayName.uppercased())
+                        .font(.display(20))
+                        .foregroundStyle(Theme.textPrimary)
+                    Text(model.session.startedAt, style: .timer)
+                        .font(.caption2.weight(.semibold).monospacedDigit())
+                        .foregroundStyle(Theme.textSecondary)
+                }
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button(listMode ? "Guided mode (one at a time)" : "List mode (all exercises)",
+                           systemImage: listMode ? "rectangle.portrait" : "list.bullet") {
+                        withAnimation(.snappy) { listMode.toggle() }
+                    }
+                    Button("Add exercise", systemImage: "plus") { showPicker = true }
+                    Button("Finish workout", systemImage: "flag.checkered") { confirmFinish = true }
+                    Button("Discard workout", systemImage: "trash", role: .destructive) { confirmDiscard = true }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .font(.system(size: 19, weight: .semibold))
+                        .frame(width: 44, height: 44)
+                }
+            }
+        }
+        .sheet(isPresented: $showPicker) {
+            ExercisePickerSheet { ex in withAnimation(.snappy) { model.addExercise(ex) } }
+        }
+        .sheet(item: $detailExercise) { ex in
+            NavigationStack { ExerciseDetailView(exercise: ex) }
+                .presentationDetents([.large])
+        }
+        .confirmationDialog(finishMessage, isPresented: $confirmFinish, titleVisibility: .visible) {
+            Button("Finish") { finish() }
+            Button("Keep going", role: .cancel) {}
+        }
+        .confirmationDialog("Discard this workout? Logged sets will be deleted.", isPresented: $confirmDiscard,
+                            titleVisibility: .visible) {
+            Button("Discard", role: .destructive) {
+                model.discard()
+                dismiss()
+            }
+        }
+    }
+
+    private var listView: some View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
@@ -87,52 +157,6 @@ struct ActiveWorkoutView: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             RestTimerBar()
                 .animation(.snappy, value: restTimer.isRunning)
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.down")
-                        .font(.system(size: 17, weight: .bold))
-                        .frame(width: 44, height: 44)
-                }
-                .accessibilityLabel("Minimise workout")
-            }
-            ToolbarItem(placement: .principal) {
-                Text(model.session.dayName.uppercased())
-                    .font(.display(22))
-                    .foregroundStyle(Theme.textPrimary)
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                Menu {
-                    Button("Finish workout", systemImage: "flag.checkered") { confirmFinish = true }
-                    Button("Discard workout", systemImage: "trash", role: .destructive) { confirmDiscard = true }
-                } label: {
-                    Image(systemName: "ellipsis.circle")
-                        .font(.system(size: 19, weight: .semibold))
-                        .frame(width: 44, height: 44)
-                }
-            }
-        }
-        .sheet(isPresented: $showPicker) {
-            ExercisePickerSheet { ex in withAnimation(.snappy) { model.addExercise(ex) } }
-        }
-        .sheet(item: $detailExercise) { ex in
-            NavigationStack { ExerciseDetailView(exercise: ex) }
-                .presentationDetents([.large])
-        }
-        .confirmationDialog(finishMessage, isPresented: $confirmFinish, titleVisibility: .visible) {
-            Button("Finish") { finish() }
-            Button("Keep going", role: .cancel) {}
-        }
-        .confirmationDialog("Discard this workout? Logged sets will be deleted.", isPresented: $confirmDiscard,
-                            titleVisibility: .visible) {
-            Button("Discard", role: .destructive) {
-                model.discard()
-                dismiss()
-            }
         }
     }
 

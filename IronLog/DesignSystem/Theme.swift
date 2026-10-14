@@ -4,11 +4,11 @@ import UIKit
 /// All colours and fonts live here. Change the accent in one place and the whole app follows.
 enum Theme {
     // Surfaces (darkest → lightest)
-    static let background = Color(hex: 0x0A0A0B)
-    static let surface = Color(hex: 0x141518)
-    static let card = Color(hex: 0x1C1E22)
-    static let cardRaised = Color(hex: 0x262930)
-    static let stroke = Color(hex: 0x33373E)
+    static let background = Color(hex: 0x08080A)
+    static let surface = Color(hex: 0x111214)
+    static let card = Color(hex: 0x16171B)
+    static let cardRaised = Color(hex: 0x212329)
+    static let stroke = Color(hex: 0x2C2F36)
 
     // Text
     static let textPrimary = Color(hex: 0xF2F2F0)
@@ -16,9 +16,16 @@ enum Theme {
     static let textFaint = Color(hex: 0x5D626A)
 
     // The one accent colour (deep red) + a dimmer shade for secondary highlights
-    static let accent = Color(hex: 0xC8102E)
+    static let accent = Color(hex: 0xE0142F)
+    static let ember = Color(hex: 0xFF5A36)
     static let accentDim = Color(hex: 0x6E1020)
-    static let accentGlow = Color(hex: 0xC8102E, opacity: 0.22)
+    static let accentGlow = Color(hex: 0xE0142F, opacity: 0.35)
+
+    /// Signature red → ember gradient, used sparingly for the main action and progress.
+    static let accentGradient = LinearGradient(colors: [accent, ember], startPoint: .leading, endPoint: .trailing)
+    /// Dark crimson wash for hero cards.
+    static let heroGradient = LinearGradient(colors: [Color(hex: 0x3A0A12), Color(hex: 0x1A0C10), Color(hex: 0x121316)],
+                                             startPoint: .topLeading, endPoint: .bottomTrailing)
 
     static let cornerRadius: CGFloat = 14
     static let gutter: CGFloat = 16

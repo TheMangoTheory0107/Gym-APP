@@ -19,10 +19,30 @@ extension View {
         self
             .padding(padding)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(raised ? Theme.cardRaised : Theme.card, in: RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous))
+            .background(
+                RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous)
+                    .fill(raised ? Theme.cardRaised : Theme.card)
+                    .overlay(
+                        // Faint top highlight for a machined, premium edge.
+                        RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous)
+                            .fill(LinearGradient(colors: [Color.white.opacity(0.035), .clear], startPoint: .top, endPoint: .center))
+                    )
+            )
             .overlay(
                 RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous)
-                    .strokeBorder(Theme.stroke.opacity(0.6), lineWidth: 1)
+                    .strokeBorder(Theme.stroke.opacity(0.7), lineWidth: 1)
+            )
+    }
+
+    /// Crimson hero card used for the most important thing on a screen.
+    func heroCardStyle(padding: CGFloat = 18) -> some View {
+        self
+            .padding(padding)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Theme.heroGradient, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .strokeBorder(Theme.accent.opacity(0.28), lineWidth: 1)
             )
     }
 }
@@ -75,8 +95,12 @@ struct PrimaryButtonStyle: ButtonStyle {
             .tracking(1.5)
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity, minHeight: 56)
-            .background(Theme.accent.opacity(configuration.isPressed ? 0.75 : 1),
-                        in: RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous))
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Theme.accentGradient)
+                    .opacity(configuration.isPressed ? 0.8 : 1)
+            )
+            .shadow(color: Theme.accentGlow, radius: configuration.isPressed ? 6 : 16, y: 6)
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
             .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
     }
@@ -159,6 +183,43 @@ struct StatTile: View {
 }
 
 // MARK: - Rings
+
+/// Horizontal progress bar with the accent gradient.
+struct GradientBar: View {
+    let progress: Double
+    var height: CGFloat = 6
+    var muted = false
+
+    var body: some View {
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                Capsule().fill(Theme.cardRaised)
+                Capsule()
+                    .fill(muted ? AnyShapeStyle(Theme.textSecondary) : AnyShapeStyle(Theme.accentGradient))
+                    .frame(width: geo.size.width * min(max(progress, 0), 1))
+            }
+        }
+        .frame(height: height)
+        .animation(.spring(response: 0.5, dampingFraction: 0.85), value: progress)
+    }
+}
+
+/// Small pill with an SF Symbol, e.g. "55 min".
+struct InfoPill: View {
+    let icon: String
+    let text: String
+    var highlight = false
+
+    var body: some View {
+        HStack(spacing: 5) {
+            Image(systemName: icon).font(.system(size: 11, weight: .bold))
+            Text(text).font(.system(size: 12, weight: .semibold))
+        }
+        .padding(.horizontal, 10).padding(.vertical, 6)
+        .foregroundStyle(highlight ? Theme.ember : Theme.textSecondary)
+        .background(highlight ? Theme.accent.opacity(0.16) : Theme.cardRaised.opacity(0.9), in: Capsule())
+    }
+}
 
 /// Bold progress ring. `progress` can go past 1 (over target) and shows a second lap.
 struct ProgressRing: View {

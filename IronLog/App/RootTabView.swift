@@ -10,26 +10,30 @@ struct RootTabView: View {
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage(ProfileKey.didSeed) private var didSeed = false
     @State private var tab: AppTab = .today
+    @AppStorage(ProfileKey.onboarded) private var onboarded = false
 
     var body: some View {
         TabView(selection: $tab) {
-            TodayView()
-                .tabItem { Label("TODAY", systemImage: "flame.fill") }
+            HomeView()
+                .tabItem { Label("HOME", systemImage: "house") }
                 .tag(AppTab.today)
 
             ExerciseLibraryView()
-                .tabItem { Label("EXERCISES", systemImage: "figure.strengthtraining.traditional") }
+                .tabItem { Label("EXERCISES", systemImage: "dumbbell") }
                 .tag(AppTab.exercises)
 
             NutritionView()
-                .tabItem { Label("NUTRITION", systemImage: "fork.knife") }
+                .tabItem { Label("FOOD", systemImage: "fork.knife") }
                 .tag(AppTab.nutrition)
 
             ProgressTabView()
-                .tabItem { Label("PROGRESS", systemImage: "chart.xyaxis.line") }
+                .tabItem { Label("PROGRESS", systemImage: "chart.line.uptrend.xyaxis") }
                 .tag(AppTab.progress)
         }
         .onChange(of: tab) { _, _ in Haptics.select() }
+        .fullScreenCover(isPresented: Binding(get: { !onboarded }, set: { if !$0 { onboarded = true } })) {
+            OnboardingView { onboarded = true }
+        }
         .task {
             seedIfNeeded()
             let custom = (try? context.fetch(FetchDescriptor<CustomExercise>())) ?? []
@@ -38,7 +42,10 @@ struct RootTabView: View {
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { WidgetSync.update(context: context) }
-            if phase == .active { RestTimer.shared.refresh() }
+            if phase == .active {
+                RestTimer.shared.refresh()
+                Task { await HealthData.shared.refresh() }
+            }
         }
     }
 

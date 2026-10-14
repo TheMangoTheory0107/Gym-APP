@@ -14,6 +14,7 @@ enum AppSchema {
         LearnedPortion.self,
         SupplementCheck.self,
         CustomExercise.self,
+        WaterLog.self,
     ]
 }
 
@@ -190,6 +191,18 @@ final class SupplementCheck {
         self.dayKey = dayKey
         self.supplementId = supplementId
         self.takenAt = takenAt
+    }
+}
+
+/// A glass / bottle of water.
+@Model
+final class WaterLog {
+    var date: Date
+    var ml: Double
+
+    init(date: Date = .now, ml: Double) {
+        self.date = date
+        self.ml = ml
     }
 }
 

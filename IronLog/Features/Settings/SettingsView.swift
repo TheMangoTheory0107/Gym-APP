@@ -13,6 +13,9 @@ struct SettingsView: View {
     @AppStorage(ProfileKey.fatTarget) private var fatTarget = ProfileDefault.fat
     @AppStorage(ProfileKey.restSeconds) private var restSeconds = ProfileDefault.restSeconds
     @AppStorage(ProfileKey.healthSyncEnabled) private var healthSync = false
+    @AppStorage(ProfileKey.waterTargetMl) private var waterTarget = ProfileDefault.waterTargetMl
+    @AppStorage(ProfileKey.name) private var name = ProfileDefault.name
+    @AppStorage(ProfileKey.onboarded) private var onboarded = true
 
     @State private var healthStatus = ""
     @State private var notificationStatus = ""
@@ -27,6 +30,7 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 Section {
+                    TextField("Name", text: $name)
                     numberRow("Height", value: $heightCm, unit: "cm", step: 0.5)
                 } header: { header("Profile") }
 
@@ -48,7 +52,11 @@ struct SettingsView: View {
                 } header: { header("Workout") }
 
                 Section {
-                    Toggle("Sync weight with Apple Health", isOn: $healthSync)
+                    numberRow("Daily water", value: $waterTarget, unit: "ml", step: 250)
+                } header: { header("Water") }
+
+                Section {
+                    Toggle("Connect Apple Health", isOn: $healthSync)
                         .tint(Theme.accent)
                         .onChange(of: healthSync) { _, on in
                             if on { Task { await connectHealth() } }
@@ -132,6 +140,7 @@ struct SettingsView: View {
                 Section {
                     LabeledContent("Version", value: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—")
                     LabeledContent("Exercises loaded", value: "\(Catalog.shared.exercises.count)")
+                    Button("Show welcome screens again") { onboarded = false }
                 } header: { header("About") }
             }
             .scrollContentBackground(.hidden)
@@ -203,6 +212,7 @@ struct SettingsView: View {
     private func connectHealth() async {
         do {
             try await HealthKitManager.shared.requestAuthorization()
+            await HealthData.shared.refresh()
             healthStatus = HealthKitManager.shared.canWriteWeight
                 ? "Connected. New weigh-ins will be saved to Apple Health."
                 : "Write access is off. Enable it in the Health app → Profile → Apps → Iron Log."

@@ -31,21 +31,18 @@ struct NutritionView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    ScreenTitle(title: "Nutrition",
-                                kicker: Date.now.formatted(.dateTime.weekday(.wide).day().month(.abbreviated)))
-
+                VStack(alignment: .leading, spacing: 16) {
                     if !db.loadErrors.isEmpty { DataErrorBanner(errors: db.loadErrors) }
 
-                    calorieCard
-                    HStack(spacing: 10) {
-                        MacroRing(name: "Protein", value: eaten.protein, target: proteinTarget, emphasised: true)
-                        MacroRing(name: "Carbs", value: eaten.carbs, target: carbsTarget)
-                        MacroRing(name: "Fat", value: eaten.fat, target: fatTarget)
-                    }
-
+                    foodHeader
+                    macroBars
+                    nextMealCard
+                    mealChips
+                    WaterCard()
                     logBox
 
+                    SectionLabel(text: "Full diet plan", accent: true)
+                        .padding(.top, 6)
                     SectionLabel(text: "Diet plan", accent: true)
                     ForEach(db.plan) { meal in
                         PlanMealCard(meal: meal,
@@ -95,11 +92,139 @@ struct NutritionView: View {
         }
     }
 
+    // MARK: Header
+
+    private var foodHeader: some View {
+        let left = kcalTarget - eaten.kcal
+        return VStack(alignment: .leading, spacing: 0) {
+            Text("FOOD · " + Date.now.formatted(.dateTime.weekday(.wide)).uppercased())
+                .font(.display(17)).tracking(2).foregroundStyle(Theme.ember)
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text("\(Int(abs(left)).formatted())")
+                    .font(.display(52)).foregroundStyle(Theme.textPrimary).monospacedDigit()
+                    .contentTransition(.numericText())
+                Text(left >= 0 ? "KCAL TO GO" : "KCAL OVER")
+                    .font(.display(24)).foregroundStyle(left >= 0 ? Theme.textSecondary : Theme.ember)
+            }
+            GradientBar(progress: eaten.kcal / max(kcalTarget, 1), height: 6)
+                .padding(.top, 2)
+            Text("\(Int(eaten.kcal)) eaten of \(Int(kcalTarget)) kcal")
+                .font(.caption.weight(.semibold)).foregroundStyle(Theme.textFaint).padding(.top, 6)
+        }
+        .padding(.top, 4)
+    }
+
+    private var macroBars: some View {
+        HStack(spacing: 8) {
+            macroTile("Protein", eaten.protein, proteinTarget, emphasised: true)
+            macroTile("Carbs", eaten.carbs, carbsTarget)
+            macroTile("Fat", eaten.fat, fatTarget)
+        }
+    }
+
+    private func macroTile(_ name: String, _ value: Double, _ target: Double, emphasised: Bool = false) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 2) {
+                Text(name.uppercased()).font(.system(size: 11, weight: .bold)).tracking(0.6).foregroundStyle(Theme.textFaint)
+                if emphasised { Spacer(minLength: 0); HelpButton(term: "macros").frame(width: 20, height: 20) }
+            }
+            HStack(alignment: .firstTextBaseline, spacing: 2) {
+                Text("\(Int(value))").font(.display(30))
+                    .foregroundStyle(emphasised ? Theme.ember : Theme.textPrimary).monospacedDigit()
+                Text("/ \(Int(target)) G").font(.display(15)).foregroundStyle(Theme.textSecondary)
+            }
+            GradientBar(progress: value / max(target, 1), height: 5, muted: !emphasised)
+        }
+        .cardStyle(padding: 12)
+    }
+
+    /// The first planned meal not logged yet today.
+    private var nextMeal: PlanMeal? {
+        db.plan.first { meal in !todaysFood.contains { $0.meal == meal.name } }
+    }
+
+    @ViewBuilder
+    private var nextMealCard: some View {
+        if let meal = nextMeal {
+            let m = db.macros(of: meal)
+            VStack(alignment: .leading, spacing: 10) {
+                Text("NEXT MEAL · \(meal.time.uppercased())").font(.display(16)).tracking(2).foregroundStyle(Theme.ember)
+                Text(meal.name.uppercased()).font(.display(40)).foregroundStyle(Theme.textPrimary)
+                VStack(alignment: .leading, spacing: 5) {
+                    ForEach(Array(meal.items.enumerated()), id: \.offset) { _, item in
+                        HStack(spacing: 8) {
+                            Circle().fill(Theme.ember).frame(width: 5, height: 5)
+                            Text(planItemText(item)).font(.subheadline).foregroundStyle(Theme.textSecondary)
+                        }
+                    }
+                }
+                HStack(spacing: 6) {
+                    InfoPill(icon: "flame", text: "\(Int(m.kcal)) kcal")
+                    InfoPill(icon: "bolt.fill", text: "\(Int(m.protein)) g protein", highlight: true)
+                }
+                Button {
+                    ateAsPlanned(meal)
+                } label: {
+                    Label("I ate this", systemImage: "checkmark")
+                }
+                .buttonStyle(.primary)
+                HStack(spacing: 8) {
+                    Button {
+                        review = ReviewRequest(items: FoodLogStore.parsedItems(for: meal), meal: meal.name, title: meal.name)
+                    } label: {
+                        Label("Adjust", systemImage: "slider.horizontal.3")
+                    }
+                    .buttonStyle(.secondary)
+                    Button {
+                        Haptics.tap()
+                        inputFocused = true
+                    } label: {
+                        Label("Ate else", systemImage: "square.and.pencil")
+                    }
+                    .buttonStyle(.secondary)
+                }
+            }
+            .heroCardStyle()
+        } else {
+            HStack(spacing: 12) {
+                Image(systemName: "checkmark.seal.fill").font(.system(size: 28)).foregroundStyle(Theme.ember)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("ALL MEALS LOGGED").font(.display(24)).foregroundStyle(Theme.textPrimary)
+                    Text("Nice work. Anything extra? Log it below.").font(.subheadline).foregroundStyle(Theme.textSecondary)
+                }
+            }
+            .heroCardStyle()
+        }
+    }
+
+    private var mealChips: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 6) {
+                ForEach(db.plan) { meal in
+                    let logged = todaysFood.contains { $0.meal == meal.name }
+                    HStack(spacing: 5) {
+                        Image(systemName: logged ? "checkmark" : "clock").font(.system(size: 10, weight: .heavy))
+                        Text(meal.name).font(.system(size: 12, weight: .semibold))
+                    }
+                    .padding(.horizontal, 11).padding(.vertical, 7)
+                    .foregroundStyle(logged ? Theme.ember : Theme.textSecondary)
+                    .background(logged ? Theme.accent.opacity(0.15) : Theme.card, in: Capsule())
+                }
+            }
+        }
+    }
+
+    private func planItemText(_ item: PlanItem) -> String {
+        let name = db.food(item.food)?.name ?? item.food
+        let unit = ["g", "ml"].contains(item.unit) ? item.unit : " \(item.unit)"
+        return "\(Fmt.weight(item.qty))\(unit) \(name.lowercased())"
+    }
+
     // MARK: Log box
 
     private var logBox: some View {
         VStack(alignment: .leading, spacing: 10) {
-            SectionLabel(text: "What did you eat?")
+            SectionLabel(text: "Log something else")
             ZStack(alignment: .topLeading) {
                 if text.isEmpty {
                     Text("e.g. 2 rotis, 1 bowl dal, 150g paneer, 1 banana")
@@ -115,7 +240,7 @@ struct NutritionView: View {
             .padding(.horizontal, 10)
             .background(Theme.cardRaised, in: RoundedRectangle(cornerRadius: 10))
 
-            Text("Tip: tap the 🎤 on the keyboard to speak it.")
+            Label("Prefer talking? Tap the microphone on the keyboard and say it.", systemImage: "mic.fill")
                 .font(.caption)
                 .foregroundStyle(Theme.textFaint)
 

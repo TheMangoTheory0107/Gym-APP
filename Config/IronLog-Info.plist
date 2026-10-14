@@ -7,8 +7,8 @@
 	<key>NSSupportsLiveActivities</key>
 	<true/>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Iron Log reads your body weight and body fat from Apple Health to keep your progress charts and BMI up to date.</string>
+	<string>Iron Log reads your weight, body fat, water, steps, activity and workouts from Apple Health so your dashboard, streak and progress update automatically.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>Iron Log saves the weigh-ins you log in the app to Apple Health.</string>
+	<string>Iron Log saves the weigh-ins and water you log in the app to Apple Health.</string>
 </dict>
 </plist>

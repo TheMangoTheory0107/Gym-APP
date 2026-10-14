@@ -108,8 +108,8 @@ enum TrainingStats {
 
     /// Consecutive training days (Mon–Sat) completed, counting back from today. Sundays never break it;
     /// today doesn't break it until the day is over.
-    static func streak(_ sessions: [WorkoutSession]) -> Int {
-        let days = trainedDays(sessions)
+    static func streak(_ sessions: [WorkoutSession], extraDays: Set<String> = []) -> Int {
+        let days = trainedDays(sessions).union(extraDays)
         var date = Date.now
         var count = 0
         var first = true

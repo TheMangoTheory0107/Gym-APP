@@ -10,6 +10,12 @@ enum ProfileKey {
     static let restSeconds = "workout.restSeconds"
     static let healthSyncEnabled = "health.syncEnabled"
     static let didSeed = "app.didSeed"
+    static let waterTargetMl = "water.targetMl"
+    static let waterReminders = "water.reminders"
+    static let onboarded = "app.onboarded"
+    static let goal = "profile.goal"
+    static let experience = "profile.experience"
+    static let name = "profile.name"
 }
 
 enum ProfileDefault {
@@ -21,6 +27,9 @@ enum ProfileDefault {
     static let carbs = 326.0
     static let fat = 75.0
     static let restSeconds = 90
+    /// ~35 ml per kg plus ~500 ml for training days.
+    static let waterTargetMl = 3500.0
+    static let name = "Aryaman"
 }
 
 /// BMI, lean mass and FFMI calculations.

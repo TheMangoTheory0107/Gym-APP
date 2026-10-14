@@ -198,6 +198,7 @@ private struct StrengthSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             streakCard
+            HealthHistoryCard()
 
             if loggedExercises.isEmpty {
                 EmptyStateCard(icon: "dumbbell.fill", title: "No lifts yet",
@@ -216,7 +217,7 @@ private struct StrengthSection: View {
     }
 
     private var streakCard: some View {
-        let days = TrainingStats.trainedDays(sessions)
+        let days = TrainingStats.trainedDays(sessions).union(HealthData.shared.workoutDays)
         let weekStart = WorkoutStats.startOfWeek()
         let start = Calendar.current.date(byAdding: .weekOfYear, value: -11, to: weekStart) ?? weekStart
         let cells = (0..<84).compactMap { Calendar.current.date(byAdding: .day, value: $0, to: start) }
@@ -224,7 +225,7 @@ private struct StrengthSection: View {
             HStack(alignment: .firstTextBaseline) {
                 SectionLabel(text: "Workout streak")
                 Spacer()
-                Text("\(TrainingStats.streak(sessions))").font(.display(40)).foregroundStyle(Theme.accent)
+                Text("\(TrainingStats.streak(sessions, extraDays: HealthData.shared.workoutDays))").font(.display(40)).foregroundStyle(Theme.accent)
                 Text("DAYS").font(.display(16)).foregroundStyle(Theme.textSecondary)
             }
             HStack(spacing: 4) {
