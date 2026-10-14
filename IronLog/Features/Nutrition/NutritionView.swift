@@ -35,16 +35,15 @@ struct NutritionView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     if !db.loadErrors.isEmpty { DataErrorBanner(errors: db.loadErrors) }
 
-                    foodHeader
-                    macroBars
-                    nextMealCard
+                    foodHeader.revealOnAppear()
+                    macroBars.revealOnAppear(delay: 0.06)
+                    nextMealCard.revealOnAppear(delay: 0.12)
                     mealChips
                     WaterCard()
                     logBox
 
                     SectionLabel(text: "Full diet plan", accent: true)
                         .padding(.top, 6)
-                    SectionLabel(text: "Diet plan", accent: true)
                     ForEach(db.plan) { meal in
                         PlanMealCard(meal: meal,
                                      logged: todaysFood.contains { $0.meal == meal.name },

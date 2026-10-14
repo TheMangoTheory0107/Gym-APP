@@ -33,22 +33,25 @@ struct HomeView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     if !catalog.loadErrors.isEmpty { DataErrorBanner(errors: catalog.loadErrors) }
 
-                    header
+                    header.revealOnAppear()
 
                     if let open = openSession {
                         resumeCard(open)
                     }
 
-                    if let day, !day.isRest {
-                        workoutHero(day)
-                    } else {
-                        restHero
-                        WeeklySummaryCard(sessions: sessions)
+                    Group {
+                        if let day, !day.isRest {
+                            workoutHero(day)
+                        } else {
+                            restHero
+                            WeeklySummaryCard(sessions: sessions)
+                        }
                     }
+                    .revealOnAppear(delay: 0.06)
 
-                    ActivityCard()
-                    WaterCard()
-                    checklist
+                    ActivityCard().revealOnAppear(delay: 0.12)
+                    WaterCard().revealOnAppear(delay: 0.18)
+                    checklist.revealOnAppear(delay: 0.24)
                 }
                 .padding(.horizontal, Theme.gutter)
                 .padding(.bottom, 32)

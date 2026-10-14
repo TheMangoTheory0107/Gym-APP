@@ -6,9 +6,72 @@ struct ScreenBackground: ViewModifier {
     func body(content: Content) -> some View {
         content
             .scrollContentBackground(.hidden)
-            .background(Theme.background.ignoresSafeArea())
+            .background(
+                ZStack(alignment: .top) {
+                    Theme.background
+                    // Faint crimson light from above, like a spotlight over the gym floor.
+                    RadialGradient(colors: [Theme.accent.opacity(0.10), .clear],
+                                   center: .top, startRadius: 0, endRadius: 420)
+                        .frame(height: 520)
+                        .allowsHitTesting(false)
+                }
+                .ignoresSafeArea()
+            )
     }
 }
+
+/// A slow diagonal light sweep across the view, like light catching brushed metal.
+struct Sheen: ViewModifier {
+    var period: Double = 5
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var start = Date()
+
+    func body(content: Content) -> some View {
+        content.overlay {
+            if !reduceMotion {
+                TimelineView(.animation(minimumInterval: 1 / 30)) { ctx in
+                    let t = ctx.date.timeIntervalSince(start).truncatingRemainder(dividingBy: period)
+                    // Sweep for the first 1.4 s of each period, then rest.
+                    let x = min(t / 1.4, 1)
+                    GeometryReader { geo in
+                        LinearGradient(colors: [.clear, Color.white.opacity(0.10), .clear],
+                                       startPoint: .leading, endPoint: .trailing)
+                            .frame(width: geo.size.width * 0.45)
+                            .rotationEffect(.degrees(18))
+                            .offset(x: -geo.size.width * 0.6 + geo.size.width * 1.8 * x)
+                            .opacity(x < 1 ? 1 : 0)
+                    }
+                    .allowsHitTesting(false)
+                }
+            }
+        }
+    }
+}
+
+/// Fades and lifts a view in the first time it appears.
+struct RevealOnAppear: ViewModifier {
+    var delay: Double = 0
+    @State private var shown = false
+
+    func body(content: Content) -> some View {
+        content
+            .opacity(shown ? 1 : 0)
+            .offset(y: shown ? 0 : 14)
+            .onAppear {
+                guard !shown else { return }
+                withAnimation(.spring(response: 0.55, dampingFraction: 0.9).delay(delay)) { shown = true }
+            }
+    }
+}
+
+extension View {
+    func sheen(period: Double = 5) -> some View { modifier(Sheen(period: period)) }
+    func revealOnAppear(delay: Double = 0) -> some View { modifier(RevealOnAppear(delay: delay)) }
+}
+
+/// Top-lit edge used on cards: brighter on top, fading into the stroke colour.
+private let machinedEdge = LinearGradient(colors: [Color.white.opacity(0.13), Theme.stroke.opacity(0.55), Theme.stroke.opacity(0.35)],
+                                          startPoint: .top, endPoint: .bottom)
 
 extension View {
     /// Near-black app background behind a screen.
@@ -30,8 +93,9 @@ extension View {
             )
             .overlay(
                 RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous)
-                    .strokeBorder(Theme.stroke.opacity(0.7), lineWidth: 1)
+                    .strokeBorder(machinedEdge, lineWidth: 1)
             )
+            .shadow(color: .black.opacity(0.35), radius: 10, y: 6)
     }
 
     /// Crimson hero card used for the most important thing on a screen.
@@ -39,11 +103,22 @@ extension View {
         self
             .padding(padding)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Theme.heroGradient, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .background(
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .fill(Theme.heroGradient)
+                    .overlay(
+                        RadialGradient(colors: [Theme.accent.opacity(0.22), .clear],
+                                       center: .topLeading, startRadius: 0, endRadius: 260)
+                    )
+                    .sheen(period: 7)
+                    .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+            )
             .overlay(
                 RoundedRectangle(cornerRadius: 22, style: .continuous)
-                    .strokeBorder(Theme.accent.opacity(0.28), lineWidth: 1)
+                    .strokeBorder(LinearGradient(colors: [Theme.ember.opacity(0.55), Theme.accent.opacity(0.18), Color.white.opacity(0.06)],
+                                                 startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 1)
             )
+            .shadow(color: Theme.accent.opacity(0.18), radius: 24, y: 10)
     }
 }
 
@@ -98,6 +173,16 @@ struct PrimaryButtonStyle: ButtonStyle {
             .background(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .fill(Theme.accentGradient)
+                    .overlay(
+                        // Glossy top half.
+                        LinearGradient(colors: [Color.white.opacity(0.18), .clear], startPoint: .top, endPoint: .center)
+                    )
+                    .sheen(period: 4.5)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .strokeBorder(Color.white.opacity(0.18), lineWidth: 0.75)
+                    )
                     .opacity(configuration.isPressed ? 0.8 : 1)
             )
             .shadow(color: Theme.accentGlow, radius: configuration.isPressed ? 6 : 16, y: 6)
@@ -147,7 +232,7 @@ struct Tag: View {
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .foregroundStyle(filled ? Color.white : Theme.textSecondary)
-            .background(filled ? Theme.accent : Theme.cardRaised, in: Capsule())
+            .background(filled ? AnyShapeStyle(Theme.accentGradient) : AnyShapeStyle(Theme.cardRaised), in: Capsule())
     }
 }
 
@@ -164,6 +249,7 @@ struct StatTile: View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(alignment: .firstTextBaseline, spacing: 3) {
                 Text(value)
+                    .contentTransition(.numericText())
                     .font(.display(34, relativeTo: .title))
                     .foregroundStyle(highlight ? Theme.accent : Theme.textPrimary)
                     .monospacedDigit()
@@ -227,14 +313,22 @@ struct ProgressRing: View {
     var lineWidth: CGFloat = 14
     var color: Color = Theme.accent
 
+    private var ringStyle: AnyShapeStyle {
+        guard color == Theme.accent else { return AnyShapeStyle(color) }
+        let end = min(max(progress, 0.01), 1)
+        return AnyShapeStyle(AngularGradient(colors: [Theme.accent, Theme.ember], center: .center,
+                                             startAngle: .degrees(0), endAngle: .degrees(360 * end)))
+    }
+
     var body: some View {
         ZStack {
             Circle()
                 .stroke(Theme.cardRaised, lineWidth: lineWidth)
             Circle()
                 .trim(from: 0, to: min(max(progress, 0), 1))
-                .stroke(color, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
+                .stroke(ringStyle, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
                 .rotationEffect(.degrees(-90))
+                .shadow(color: color.opacity(progress > 0 ? 0.45 : 0), radius: lineWidth * 0.6)
             if progress > 1 {
                 Circle()
                     .trim(from: 0, to: min(progress - 1, 1))
