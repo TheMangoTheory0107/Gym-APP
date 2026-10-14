@@ -117,7 +117,13 @@ struct FormDemoView: View {
         let frames = [0, 1].compactMap { BundledImage.load("form_\(exercise.id)_\($0)") }
         ZStack(alignment: .topLeading) {
             if frames.isEmpty {
-                Rectangle().fill(Theme.cardRaised).frame(height: 200)
+                VStack(spacing: 6) {
+                    Image(systemName: "photo").font(.system(size: 26, weight: .semibold))
+                    Text("No demo photos for this one yet").font(.footnote.weight(.semibold))
+                }
+                .foregroundStyle(Theme.textFaint)
+                .frame(maxWidth: .infinity, minHeight: 200)
+                .background(Theme.cardRaised)
             } else {
                 Image(uiImage: frames[frame % frames.count])
                     .resizable()
@@ -227,9 +233,12 @@ struct ExerciseDetailView: View {
                         Haptics.tap()
                         openURL(url)
                     } label: {
-                        Label("Watch form video", systemImage: "play.rectangle.fill")
+                        Label("Search videos on YouTube", systemImage: "magnifyingglass")
                     }
                     .buttonStyle(.secondary)
+                    Text("Opens a YouTube search for \"\(exercise.name) proper form\" — needs internet. Everything else here works offline.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textFaint)
                 }
             }
             .padding(.horizontal, Theme.gutter)
