@@ -48,6 +48,13 @@ final class ActiveWorkoutModel {
     var totalSets: Int { blocks.reduce(0) { $0 + $1.sets.count } }
     var volume: Double { session.totalVolume }
 
+    /// Re-reads saved sets, e.g. after sets were ticked off on the Apple Watch.
+    func reload() {
+        blocks = buildBlocks()
+        if let e = expandedBlock, blocks.indices.contains(e), !blocks[e].isComplete { return }
+        expandedBlock = blocks.first { !$0.isComplete }?.id
+    }
+
     // MARK: Building
 
     private func buildBlocks() -> [ExerciseBlock] {
@@ -157,6 +164,7 @@ final class ActiveWorkoutModel {
         } else {
             RestTimer.shared.skip()
         }
+        PhoneWatchBridge.shared.sendPlan()
     }
 
     /// Un-tick a set to edit it.
@@ -166,6 +174,7 @@ final class ActiveWorkoutModel {
         try? context.save()
         blocks[b].sets[s].log = nil
         Haptics.tap()
+        PhoneWatchBridge.shared.sendPlan()
     }
 
     func addSet(block b: Int) {
@@ -182,12 +191,14 @@ final class ActiveWorkoutModel {
         try? context.save()
         WidgetSync.update(context: context)
         Haptics.success()
+        PhoneWatchBridge.shared.sendPlan()
     }
 
     func discard() {
         RestTimer.shared.skip()
         context.delete(session)
         try? context.save()
+        PhoneWatchBridge.shared.sendPlan()
     }
 
     private func nextUpLabel() -> String {

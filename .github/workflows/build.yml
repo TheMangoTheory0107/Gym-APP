@@ -22,14 +22,27 @@ jobs:
             python3 -m json.tool "$f" > /dev/null || { echo "::error file=$f::Invalid JSON"; exit 1; }
           done
 
-      - name: Build (simulator, no signing)
+      - name: Build iPhone app + widget (simulator, no signing)
         run: |
           set -o pipefail
           xcodebuild \
             -project IronLog.xcodeproj \
-            -alltargets \
+            -target IronLog \
             -sdk iphonesimulator \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \
             build | tee build.log | grep -E "error:|warning:|BUILD (SUCCEEDED|FAILED)" || true
           grep -q "BUILD SUCCEEDED" build.log
+
+      - name: Build Apple Watch app (simulator, no signing)
+        run: |
+          set -o pipefail
+          xcodebuild -showsdks | grep -i watch || true
+          xcodebuild \
+            -project IronLog.xcodeproj \
+            -target IronLogWatch \
+            -sdk watchsimulator \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            build | tee watch.log | grep -E "error:|warning:|BUILD (SUCCEEDED|FAILED)" || true
+          grep -q "BUILD SUCCEEDED" watch.log

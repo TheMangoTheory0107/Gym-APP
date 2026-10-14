@@ -39,11 +39,13 @@ struct RootTabView: View {
             let custom = (try? context.fetch(FetchDescriptor<CustomExercise>())) ?? []
             Catalog.shared.register(custom: custom.map(\.definition))
             WidgetSync.update(context: context)
+            PhoneWatchBridge.shared.configure(container: context.container)
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { WidgetSync.update(context: context) }
             if phase == .active {
                 RestTimer.shared.refresh()
+                PhoneWatchBridge.shared.sendPlan()
                 Task { await HealthData.shared.refresh() }
             }
         }

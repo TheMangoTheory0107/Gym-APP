@@ -32,7 +32,20 @@ struct ActiveWorkoutView: View {
             }
             .screenBackground()
         }
-        .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
+        .onAppear {
+            UIApplication.shared.isIdleTimerDisabled = true
+            PhoneWatchBridge.shared.sendPlan()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .watchLoggedSet)) { _ in
+            // Sets ticked off (or the workout finished) on the Apple Watch.
+            if model.session.isDeleted { dismiss(); return }
+            if model.session.isFinished, summary == nil {
+                RestTimer.shared.skip()
+                summary = WorkoutStats.summary(for: model.session, context: context)
+            } else {
+                model.reload()
+            }
+        }
         .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { restTimer.refresh() }
