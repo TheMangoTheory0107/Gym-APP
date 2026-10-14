@@ -67,7 +67,7 @@ struct ActiveWorkoutView: View {
                     Text(model.session.dayName.uppercased())
                         .font(.display(20))
                         .foregroundStyle(Theme.textPrimary)
-                    Text(model.session.startedAt, style: .timer)
+                    workoutClock(model.session)
                         .font(.caption2.weight(.semibold).monospacedDigit())
                         .foregroundStyle(Theme.textSecondary)
                 }
@@ -189,7 +189,7 @@ struct ActiveWorkoutView: View {
     private var header: some View {
         HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 2) {
-                Text(model.session.startedAt, style: .timer)
+                workoutClock(model.session)
                     .font(.display(34))
                     .foregroundStyle(Theme.textPrimary)
                     .monospacedDigit()

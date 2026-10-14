@@ -31,6 +31,10 @@ final class WorkoutSession {
     /// Weekday of the split day that was trained (1 = Sunday … 7 = Saturday), which may differ from the calendar day.
     var splitWeekday: Int
     var notes: String
+    /// Set while the workout is paused.
+    var pausedAt: Date? = nil
+    /// Total time spent paused, in seconds (left out of the workout duration).
+    var pausedSeconds: Double = 0
 
     @Relationship(deleteRule: .cascade, inverse: \SetLog.session)
     var sets: [SetLog] = []
@@ -44,6 +48,26 @@ final class WorkoutSession {
     }
 
     var isFinished: Bool { finishedAt != nil }
+    var isPaused: Bool { pausedAt != nil }
+
+    /// Start time shifted by the paused time, so the clock shows only active training.
+    var effectiveStart: Date { startedAt.addingTimeInterval(pausedSeconds) }
+
+    /// Active training time so far (or in total once finished).
+    var activeDuration: TimeInterval {
+        (pausedAt ?? finishedAt ?? .now).timeIntervalSince(effectiveStart)
+    }
+
+    func pause() {
+        guard pausedAt == nil else { return }
+        pausedAt = .now
+    }
+
+    func resume() {
+        guard let p = pausedAt else { return }
+        pausedSeconds += Date.now.timeIntervalSince(p)
+        pausedAt = nil
+    }
 
     /// Sum of weight × reps over all weighted sets, in kg.
     var totalVolume: Double {

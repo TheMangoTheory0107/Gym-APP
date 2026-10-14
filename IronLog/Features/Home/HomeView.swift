@@ -280,24 +280,46 @@ struct HomeView: View {
     }
 
     private func resumeCard(_ open: WorkoutSession) -> some View {
-        Button {
-            Haptics.thud()
-            activeSession = open
-        } label: {
-            HStack(spacing: 12) {
-                Image(systemName: "play.circle.fill").font(.system(size: 30)).foregroundStyle(.white)
-                VStack(alignment: .leading, spacing: 1) {
-                    Text("WORKOUT IN PROGRESS").font(.system(size: 10, weight: .heavy)).tracking(1).foregroundStyle(.white.opacity(0.8))
-                    Text("RESUME \(open.dayName.uppercased())").font(.display(22)).foregroundStyle(.white)
-                }
-                Spacer()
-                Text(open.startedAt, style: .timer).font(.display(20)).foregroundStyle(.white).monospacedDigit()
+        HStack(spacing: 12) {
+            // Pause / resume the workout clock right from Home.
+            Button {
+                Haptics.tap()
+                if open.isPaused { open.resume() } else { open.pause() }
+                try? context.save()
+            } label: {
+                Image(systemName: open.isPaused ? "play.circle.fill" : "pause.circle.fill")
+                    .font(.system(size: 34))
+                    .foregroundStyle(.white)
+                    .contentTransition(.symbolEffect(.replace))
+                    .frame(width: 44, height: 44)
             }
-            .padding(16)
-            .background(Theme.accentGradient, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-            .shadow(color: Theme.accentGlow, radius: 14, y: 6)
+            .buttonStyle(.plain)
+            .accessibilityLabel(open.isPaused ? "Resume workout clock" : "Pause workout clock")
+
+            Button {
+                Haptics.thud()
+                if open.isPaused { open.resume(); try? context.save() }
+                activeSession = open
+            } label: {
+                HStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(open.isPaused ? "WORKOUT PAUSED" : "WORKOUT IN PROGRESS")
+                            .font(.system(size: 10, weight: .heavy)).tracking(1).foregroundStyle(.white.opacity(0.8))
+                        Text("RESUME \(open.dayName.uppercased())").font(.display(22)).foregroundStyle(.white)
+                            .lineLimit(1).minimumScaleFactor(0.7)
+                    }
+                    Spacer()
+                    workoutClock(open).font(.display(20)).foregroundStyle(.white).monospacedDigit()
+                        .opacity(open.isPaused ? 0.6 : 1)
+                    Image(systemName: "chevron.right").font(.system(size: 14, weight: .bold)).foregroundStyle(.white.opacity(0.8))
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
         }
-        .buttonStyle(.plain)
+        .padding(.vertical, 12).padding(.horizontal, 14)
+        .background(Theme.accentGradient, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .shadow(color: Theme.accentGlow, radius: 14, y: 6)
     }
 
     // MARK: Checklist

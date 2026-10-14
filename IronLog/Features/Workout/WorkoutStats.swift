@@ -57,11 +57,11 @@ enum WorkoutStats {
     }
 
     static func summary(for session: WorkoutSession, context: ModelContext) -> WorkoutSummary {
-        let end = session.finishedAt ?? .now
+        let end = session.pausedAt ?? session.finishedAt ?? .now
         let byExercise = Dictionary(grouping: session.sets, by: \.exerciseId)
         return WorkoutSummary(
             dayName: session.dayName,
-            duration: end.timeIntervalSince(session.startedAt),
+            duration: end.timeIntervalSince(session.effectiveStart),
             volume: session.totalVolume,
             setCount: session.sets.count,
             exerciseCount: byExercise.count,
@@ -130,4 +130,9 @@ enum WorkoutStats {
         cal.firstWeekday = 2
         return cal.dateInterval(of: .weekOfYear, for: date)?.start ?? date.startOfDay
     }
+}
+
+/// Live workout clock that stops while the workout is paused.
+func workoutClock(_ session: WorkoutSession) -> Text {
+    Text(timerInterval: session.effectiveStart...Date.distantFuture, pauseTime: session.pausedAt, countsDown: false)
 }
