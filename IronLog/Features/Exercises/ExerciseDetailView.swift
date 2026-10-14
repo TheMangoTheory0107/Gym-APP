@@ -174,7 +174,7 @@ struct ExerciseDetailView: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     SectionLabel(text: "Muscles worked")
-                    MuscleMapView(exercise: exercise)
+                    MuscleViewer(exercise: exercise)
                     FlowTags(names: Catalog.shared.muscleNames(exercise.primary), filled: true)
                     if !exercise.secondary.isEmpty {
                         FlowTags(names: Catalog.shared.muscleNames(exercise.secondary), filled: false)
