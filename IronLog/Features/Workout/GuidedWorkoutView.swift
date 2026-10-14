@@ -59,21 +59,9 @@ struct GuidedWorkoutView: View {
                         .monospacedDigit()
                 }
 
-                // Media: form demo + mini muscle map
-                Button { onInfo(ex) } label: {
-                    ZStack(alignment: .bottomTrailing) {
-                        FormDemoView(exercise: ex)
-                        if let muscles = BundledImage.load("muscles_\(ex.id)_\(ex.preferredSide.rawValue)") {
-                            Image(uiImage: muscles)
-                                .resizable().scaledToFill()
-                                .frame(width: 78, height: 100)
-                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                                .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(.black, lineWidth: 2))
-                                .padding(10)
-                        }
-                    }
-                }
-                .buttonStyle(.plain)
+                // Media: big 3D muscle model + medium form demo
+                GuidedMediaView(exercise: ex, onInfo: { onInfo(ex) })
+                    .id(ex.id)
 
                 // Title
                 VStack(alignment: .leading, spacing: 2) {
@@ -409,5 +397,85 @@ struct TrailingIconLabelStyle: LabelStyle {
             configuration.title
             configuration.icon
         }
+    }
+}
+
+// MARK: - Media
+
+/// Large rotatable 3D body with the worked muscles lit, plus a medium form-demo window in the corner.
+struct GuidedMediaView: View {
+    let exercise: ExerciseDef
+    let onInfo: () -> Void
+    @State private var bodyView: BodyView
+    @State private var token = 0
+    @State private var loaded = false
+
+    init(exercise: ExerciseDef, onInfo: @escaping () -> Void) {
+        self.exercise = exercise
+        self.onInfo = onInfo
+        _bodyView = State(initialValue: exercise.preferredSide == .back ? .back : .front)
+    }
+
+    private var hasModel: Bool { Bundle.main.url(forResource: "MuscleBody", withExtension: "usdz") != nil }
+
+    var body: some View {
+        ZStack {
+            if hasModel {
+                Muscle3DView(primary: exercise.primary, secondary: exercise.secondary,
+                             view: bodyView, viewToken: token, loaded: $loaded)
+                if !loaded { ProgressView().tint(Theme.accent) }
+            } else if let image = BundledImage.load("muscles_\(exercise.id)_\(exercise.preferredSide.rawValue)") {
+                Image(uiImage: image).resizable().scaledToFit()
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 380)
+        .background(Theme.card)
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(alignment: .topLeading) {
+            if hasModel {
+                HStack(spacing: 4) {
+                    ForEach(BodyView.allCases) { v in
+                        Button {
+                            Haptics.select()
+                            bodyView = v
+                            token += 1
+                        } label: {
+                            Text(v.rawValue.uppercased())
+                                .font(.display(15)).tracking(1)
+                                .padding(.horizontal, 10).frame(minHeight: 32)
+                                .foregroundStyle(bodyView == v ? Color.white : Theme.textSecondary)
+                                .background(bodyView == v ? Theme.accent : Color.black.opacity(0.55),
+                                            in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(10)
+            }
+        }
+        .overlay(alignment: .topTrailing) {
+            Button(action: onInfo) {
+                Image(systemName: "info")
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundStyle(Theme.textPrimary)
+                    .frame(width: 36, height: 36)
+                    .background(Color.black.opacity(0.55), in: Circle())
+            }
+            .buttonStyle(.plain)
+            .padding(8)
+            .accessibilityLabel("Exercise details")
+        }
+        .overlay(alignment: .bottomTrailing) {
+            if BundledImage.load("form_\(exercise.id)_0") != nil {
+            FormDemoView(exercise: exercise)
+                .frame(width: 170)
+                .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(Color.white.opacity(0.15), lineWidth: 1))
+                .shadow(color: .black.opacity(0.6), radius: 10, y: 4)
+                .padding(10)
+            }
+        }
+        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(Theme.stroke, lineWidth: 1))
     }
 }
