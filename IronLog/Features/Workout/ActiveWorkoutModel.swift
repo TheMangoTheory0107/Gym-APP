@@ -164,7 +164,7 @@ final class ActiveWorkoutModel {
         } else {
             RestTimer.shared.skip()
         }
-        PhoneWatchBridge.shared.sendPlan()
+        PhoneWatchBridge.sync()
     }
 
     /// Un-tick a set to edit it.
@@ -174,7 +174,7 @@ final class ActiveWorkoutModel {
         try? context.save()
         blocks[b].sets[s].log = nil
         Haptics.tap()
-        PhoneWatchBridge.shared.sendPlan()
+        PhoneWatchBridge.sync()
     }
 
     func addSet(block b: Int) {
@@ -191,14 +191,14 @@ final class ActiveWorkoutModel {
         try? context.save()
         WidgetSync.update(context: context)
         Haptics.success()
-        PhoneWatchBridge.shared.sendPlan()
+        PhoneWatchBridge.sync()
     }
 
     func discard() {
         RestTimer.shared.skip()
         context.delete(session)
         try? context.save()
-        PhoneWatchBridge.shared.sendPlan()
+        PhoneWatchBridge.sync()
     }
 
     private func nextUpLabel() -> String {

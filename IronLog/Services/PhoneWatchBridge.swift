@@ -24,6 +24,11 @@ final class PhoneWatchBridge: NSObject {
 
     // MARK: Sending
 
+    /// Safe to call from anywhere; hops to the main thread.
+    nonisolated static func sync() {
+        Task { @MainActor in shared.sendPlan() }
+    }
+
     /// Sends the latest plan. Cheap; call after anything that changes today's workout.
     func sendPlan() {
         guard let session, session.activationState == .activated, session.isPaired, session.isWatchAppInstalled,
@@ -73,11 +78,13 @@ final class PhoneWatchBridge: NSObject {
     private func handle(_ message: [String: Any]) {
         guard let context = container?.mainContext else { return }
         if let log = WatchMessage.decode(WatchSetLog.self, from: message[WatchMessage.logSet]) {
-            let session = openSession(context: context) ?? {
-                let s = WorkoutSession(dayName: log.dayName, splitWeekday: log.splitWeekday)
-                context.insert(s)
-                return s
-            }()
+            let session: WorkoutSession
+            if let open = openSession(context: context) {
+                session = open
+            } else {
+                session = WorkoutSession(dayName: log.dayName, splitWeekday: log.splitWeekday)
+                context.insert(session)
+            }
             if session.isPaused { session.resume() }
             let exists = session.sets.contains { $0.exerciseId == log.exerciseId && $0.setIndex == log.setIndex }
             if !exists {
