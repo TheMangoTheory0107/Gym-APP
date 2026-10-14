@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import SwiftData
 
 /// A personal record set during a workout.
