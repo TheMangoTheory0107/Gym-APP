@@ -77,6 +77,17 @@ enum FoodLogStore {
         }
     }
 
+    /// Logged entries back as editable items (for "Edit" on a logged meal).
+    static func parsedItems(for entries: [FoodEntry], custom: [FoodItem]) -> [ParsedFood] {
+        entries.map { e in
+            let food = e.foodId.flatMap { FoodDatabase.shared.food($0, custom: custom) }
+            let direct = food == nil ? Macros(kcal: e.kcal, protein: e.protein, carbs: e.carbs, fat: e.fat, fiber: e.fiber) : nil
+            return ParsedFood(source: e.name, query: e.name, qty: e.grams, unit: "g", food: food,
+                              alternatives: food.map { [$0] } ?? [], gramsOverride: nil, directMacros: direct,
+                              directGrams: food == nil ? e.grams : nil, directName: food == nil ? e.name : nil)
+        }
+    }
+
     static func logPlanMeal(_ meal: PlanMeal, context: ModelContext) {
         save(parsedItems(for: meal), meal: meal.name, context: context, learned: [:])
     }

@@ -47,11 +47,16 @@ struct NutritionView: View {
                     SectionLabel(text: "Full diet plan", accent: true)
                         .padding(.top, 6)
                     ForEach(db.plan) { meal in
+                        let logged = todaysFood.filter { $0.meal == meal.name }
                         PlanMealCard(meal: meal,
-                                     logged: todaysFood.contains { $0.meal == meal.name },
+                                     logged: logged,
                                      onAte: { ateAsPlanned(meal) },
-                                     onAdjust: { review = ReviewRequest(items: FoodLogStore.parsedItems(for: meal),
-                                                                        meal: meal.name, title: meal.name) },
+                                     onAdjust: {
+                                         review = logged.isEmpty
+                                             ? ReviewRequest(items: FoodLogStore.parsedItems(for: meal), meal: meal.name, title: meal.name)
+                                             : ReviewRequest(items: FoodLogStore.parsedItems(for: logged, custom: customFoods.map(FoodItem.init(custom:))),
+                                                             meal: meal.name, title: "Edit \(meal.name)", replacing: logged)
+                                     },
                                      onUndo: { undo(meal) })
                     }
                     PlanVsTargetCard(plan: db.planTotal,
@@ -78,7 +83,7 @@ struct NutritionView: View {
             .scrollDismissesKeyboard(.interactively)
             .onChange(of: todaysFood.count) { _, _ in WidgetSync.update(context: context) }
             .sheet(item: $review) { r in
-                FoodReviewSheet(items: r.items, meal: r.meal, title: r.title)
+                FoodReviewSheet(items: r.items, meal: r.meal, title: r.title, replacing: r.replacing)
             }
             .overlay(alignment: .top) {
                 if let toast {
@@ -354,6 +359,7 @@ struct ReviewRequest: Identifiable {
     let items: [ParsedFood]
     let meal: String
     let title: String
+    var replacing: [FoodEntry] = []
 }
 
 // MARK: - Pieces
@@ -395,13 +401,18 @@ struct MacroRing: View {
 
 private struct PlanMealCard: View {
     let meal: PlanMeal
-    let logged: Bool
+    /// What you actually logged for this meal today (empty = not logged yet).
+    let logged: [FoodEntry]
     let onAte: () -> Void
     let onAdjust: () -> Void
     let onUndo: () -> Void
 
     var body: some View {
-        let m = FoodDatabase.shared.macros(of: meal)
+        // Once logged, show what you actually ate, not the plan.
+        let m = logged.isEmpty ? FoodDatabase.shared.macros(of: meal)
+            : logged.reduce(Macros()) { $0 + Macros(kcal: $1.kcal, protein: $1.protein, carbs: $1.carbs, fat: $1.fat) }
+        let items = logged.isEmpty ? meal.items.map(itemText)
+            : logged.map { "\(Fmt.weight($0.grams))g \($0.name.lowercased())" }
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline) {
                 VStack(alignment: .leading, spacing: 2) {
@@ -418,16 +429,20 @@ private struct PlanMealCard: View {
                         .foregroundStyle(Theme.textFaint)
                 }
             }
-            Text(meal.items.map(itemText).joined(separator: " · "))
+            Text(items.joined(separator: " · "))
                 .font(.footnote)
                 .foregroundStyle(Theme.textSecondary)
 
-            if logged {
-                HStack {
+            if !logged.isEmpty {
+                HStack(spacing: 18) {
                     Label("LOGGED", systemImage: "checkmark.circle.fill")
                         .font(.display(20))
                         .foregroundStyle(Theme.accent)
                     Spacer()
+                    Button("Edit", action: onAdjust)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.textPrimary)
+                        .frame(minHeight: 44)
                     Button("Undo", action: onUndo)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Theme.textSecondary)

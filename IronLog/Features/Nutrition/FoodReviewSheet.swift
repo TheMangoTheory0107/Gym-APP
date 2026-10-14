@@ -12,6 +12,8 @@ struct FoodReviewSheet: View {
     @State var items: [ParsedFood]
     @State var meal: String
     let title: String
+    /// Entries this review replaces (editing a meal you already logged).
+    var replacing: [FoodEntry] = []
 
     @State private var addingFor: ParsedFood.ID?
     @State private var searchingFor: ParsedFood.ID?
@@ -111,6 +113,7 @@ extension FoodReviewSheet {
         // Make sure a number still being typed is applied before saving.
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         DispatchQueue.main.async {
+            for entry in replacing { context.delete(entry) }
             FoodLogStore.save(items, meal: meal, context: context, learned: learned)
             Haptics.success()
             dismiss()
