@@ -19,8 +19,6 @@ struct ExerciseLibraryView: View {
     @State private var search = ""
     @State private var group: LibraryGroup = .all
     @State private var equipment = "Any"
-    @State private var showAdd = false
-    @State private var refresh = 0
 
     private var catalog: Catalog { Catalog.shared }
 
@@ -29,7 +27,6 @@ struct ExerciseLibraryView: View {
     }
 
     private var filtered: [ExerciseDef] {
-        _ = refresh
         let q = search.trimmingCharacters(in: .whitespaces)
         return catalog.exercises.filter { ex in
             (group == .all || LibraryGroup.of(ex) == group)
@@ -104,7 +101,7 @@ struct ExerciseLibraryView: View {
 
                     if filtered.isEmpty {
                         EmptyStateCard(icon: "magnifyingglass", title: "Nothing found",
-                                       message: "Try another name or filter, or add it as your own exercise with the + button.")
+                                       message: "Try another name, or clear the filters.")
                     }
 
                     ForEach(sections) { section in
@@ -122,19 +119,6 @@ struct ExerciseLibraryView: View {
             .screenBackground()
             .searchable(text: $search, prompt: "Search exercise or muscle")
             .navigationDestination(for: ExerciseDef.self) { ExerciseDetailView(exercise: $0) }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showAdd = true
-                    } label: {
-                        Image(systemName: "plus").font(.system(size: 17, weight: .bold)).frame(width: 44, height: 44)
-                    }
-                    .accessibilityLabel("Add your own exercise")
-                }
-            }
-            .sheet(isPresented: $showAdd) {
-                AddExerciseSheet { _ in refresh += 1 }
-            }
         }
     }
 }

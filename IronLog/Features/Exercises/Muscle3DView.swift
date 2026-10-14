@@ -121,19 +121,24 @@ struct Muscle3DView: UIViewRepresentable {
             let (lo, hi) = model.boundingBox
             height = hi.y - lo.y
 
-            // Work out which way the body faces from where the chest sits relative to the body centre.
-            var chest: SCNVector3?
-            model.enumerateHierarchy { node, stop in
-                if node.geometry != nil, MuscleModel.muscleId(of: node) == "chest" {
+            // Work out which way the body faces: from the back muscles towards the chest.
+            func centroid(_ ids: Set<String>) -> SCNVector3? {
+                var sum = SCNVector3(0, 0, 0)
+                var n: Float = 0
+                model.enumerateHierarchy { node, _ in
+                    guard node.geometry != nil, ids.contains(MuscleModel.muscleId(of: node)) else { return }
                     let (a, b) = node.boundingBox
-                    chest = node.convertPosition(SCNVector3((a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2), to: nil)
-                    stop.pointee = true
+                    let c = node.convertPosition(SCNVector3((a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2), to: nil)
+                    sum = SCNVector3(sum.x + c.x, sum.y + c.y, sum.z + c.z)
+                    n += 1
                 }
+                return n > 0 ? SCNVector3(sum.x / n, sum.y / n, sum.z / n) : nil
             }
-            if let chest {
-                let cx = chest.x, cz = chest.z
-                let len = max(sqrt(cx * cx + cz * cz), 0.0001)
-                front = SCNVector3(cx / len, 0, cz / len)
+            if let chest = centroid(["chest", "upper_chest", "abs"]) {
+                let back = centroid(["lats", "upper_back", "lower_back"]) ?? SCNVector3(0, 0, 0)
+                let dx = chest.x - back.x, dz = chest.z - back.z
+                let len = sqrt(dx * dx + dz * dz)
+                if len > 0.0001 { front = SCNVector3(dx / len, 0, dz / len) }
             }
 
             // Lights: soft ambient, warm key from the front-left, two cool rims from behind.
@@ -213,6 +218,15 @@ struct Muscle3DView: UIViewRepresentable {
             }
             let pos = SCNVector3(target.x + sin(base) * dist, target.y + height * 0.03, target.z + cos(base) * dist)
 
+            // Pinch/drag makes SceneKit switch to its own free camera; take control back first.
+            self.view?.defaultCameraController.stopInertia()
+            if self.view?.pointOfView !== camera {
+                if let current = self.view?.pointOfView {
+                    camera.position = current.position
+                    camera.orientation = current.orientation
+                }
+                self.view?.pointOfView = camera
+            }
             SCNTransaction.begin()
             SCNTransaction.animationDuration = animated ? 0.6 : 0
             camera.position = pos

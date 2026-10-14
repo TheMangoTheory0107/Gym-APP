@@ -160,6 +160,7 @@ struct FormDemoView: View {
 struct ExerciseDetailView: View {
     let exercise: ExerciseDef
     @Environment(\.openURL) private var openURL
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     @State private var best: String?
     @State private var last: String?
@@ -236,6 +237,12 @@ struct ExerciseDetailView: View {
         }
         .screenBackground()
         .navigationBarTitleDisplayMode(.inline)
+        // Swipe right anywhere (outside the 3D model) to go back, like the rest of iOS.
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 30).onEnded { v in
+                if v.translation.width > 110, abs(v.translation.height) < 70 { dismiss() }
+            }
+        )
         .task { loadHistory() }
     }
 

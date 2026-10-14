@@ -15,7 +15,7 @@ struct HomeView: View {
 
     @State private var selectedWeekday = Calendar.current.component(.weekday, from: .now)
     @State private var showSettings = false
-    @State private var showExercises = false
+    @State private var showExercises = true
     @State private var activeSession: WorkoutSession?
     private var health = HealthData.shared
 
@@ -173,11 +173,20 @@ struct HomeView: View {
                     }
                 } else if openSession == nil {
                     Button {
-                        start(day)
+                        start(day, guided: false)
                     } label: {
-                        Label("Start guided workout", systemImage: "play.fill")
+                        Label("Start workout", systemImage: "play.fill")
                     }
                     .buttonStyle(.primary)
+                    Button {
+                        start(day, guided: true)
+                    } label: {
+                        Label("Guided mode · one exercise at a time", systemImage: "figure.strengthtraining.traditional")
+                            .font(.subheadline.weight(.semibold))
+                            .frame(maxWidth: .infinity, minHeight: 40)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(Theme.ember)
                 }
 
                 HStack {
@@ -368,8 +377,9 @@ struct HomeView: View {
         .disabled(action == nil)
     }
 
-    private func start(_ day: SplitDay) {
+    private func start(_ day: SplitDay, guided: Bool) {
         Haptics.thud()
+        UserDefaults.standard.set(!guided, forKey: "workout.listMode")
         let session = WorkoutSession(dayName: day.name, splitWeekday: selectedWeekday)
         context.insert(session)
         try? context.save()

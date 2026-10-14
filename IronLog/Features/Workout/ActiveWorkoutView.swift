@@ -92,8 +92,22 @@ struct ActiveWorkoutView: View {
             ExercisePickerSheet { ex in withAnimation(.snappy) { model.addExercise(ex) } }
         }
         .sheet(item: $detailExercise) { ex in
-            NavigationStack { ExerciseDetailView(exercise: ex) }
-                .presentationDetents([.large])
+            NavigationStack {
+                ExerciseDetailView(exercise: ex)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button {
+                                detailExercise = nil
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 15, weight: .bold))
+                                    .frame(width: 40, height: 40)
+                            }
+                            .accessibilityLabel("Close")
+                        }
+                    }
+            }
+            .presentationDetents([.large])
         }
         .confirmationDialog(finishMessage, isPresented: $confirmFinish, titleVisibility: .visible) {
             Button("Finish") { finish() }
@@ -318,10 +332,12 @@ private struct SetRow: View {
             case .weightReps:
                 MiniStepper(label: "KG", text: Fmt.weight(draft.weightKg), width: 50, disabled: draft.isDone,
                             onMinus: { draft.weightKg = max(draft.weightKg - step, 0) },
-                            onPlus: { draft.weightKg += step })
+                            onPlus: { draft.weightKg += step },
+                            onSet: { draft.weightKg = ($0 * 4).rounded() / 4 })
                 MiniStepper(label: "REPS", text: "\(draft.reps)", width: 32, disabled: draft.isDone,
                             onMinus: { draft.reps = max(draft.reps - 1, 0) },
-                            onPlus: { draft.reps += 1 })
+                            onPlus: { draft.reps += 1 },
+                            onSet: { draft.reps = Int($0) })
             case .reps:
                 MiniStepper(label: (exercise.repUnit ?? "reps").uppercased(), text: "\(draft.reps)", width: 120,
                             disabled: draft.isDone,
@@ -378,10 +394,19 @@ private struct MiniStepper: View {
     var disabled = false
     let onMinus: () -> Void
     let onPlus: () -> Void
+    var onSet: ((Double) -> Void)? = nil
+
+    @State private var typing = false
+    @State private var entry = ""
 
     var body: some View {
         HStack(spacing: 0) {
             button("minus", action: onMinus)
+            Button {
+                guard onSet != nil, !disabled else { return }
+                entry = ""
+                typing = true
+            } label: {
             VStack(spacing: -2) {
                 Text(text)
                     .font(.display(24))
@@ -396,11 +421,21 @@ private struct MiniStepper: View {
                     .foregroundStyle(Theme.textFaint)
                     .lineLimit(1)
             }
-            .frame(width: width)
+            .frame(width: width, height: 48)
+            .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
             button("plus", action: onPlus)
         }
         .background(Theme.card, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
         .disabled(disabled)
+        .alert(label, isPresented: $typing) {
+            TextField(text, text: $entry).keyboardType(.decimalPad)
+            Button("Set") {
+                if let v = Double(entry.replacingOccurrences(of: ",", with: ".")), v >= 0 { onSet?(v) }
+            }
+            Button("Cancel", role: .cancel) {}
+        }
     }
 
     private func button(_ icon: String, action: @escaping () -> Void) -> some View {

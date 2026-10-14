@@ -186,23 +186,28 @@ struct GuidedWorkoutView: View {
                 BigStepper(title: ex.equipment == "dumbbell" ? "Weight (each hand)" : "Weight",
                            value: Fmt.weight(draft.weightKg), unit: "kg", footnote: last.map { "Last: \($0)" },
                            onMinus: { model.blocks[b].sets[s].weightKg = max(draft.weightKg - (ex.weightStep ?? 2.5), 0) },
-                           onPlus: { model.blocks[b].sets[s].weightKg = draft.weightKg + (ex.weightStep ?? 2.5) })
+                           onPlus: { model.blocks[b].sets[s].weightKg = draft.weightKg + (ex.weightStep ?? 2.5) },
+                           onSet: { model.blocks[b].sets[s].weightKg = ($0 * 4).rounded() / 4 })
                 BigStepper(title: "Reps", value: "\(draft.reps)", unit: nil, footnote: nil,
                            onMinus: { model.blocks[b].sets[s].reps = max(draft.reps - 1, 0) },
-                           onPlus: { model.blocks[b].sets[s].reps = draft.reps + 1 })
+                           onPlus: { model.blocks[b].sets[s].reps = draft.reps + 1 },
+                           onSet: { model.blocks[b].sets[s].reps = Int($0) })
             }
         case .reps:
             BigStepper(title: (ex.repUnit ?? "reps").capitalized, value: "\(draft.reps)", unit: nil, footnote: last.map { "Last: \($0)" },
                        onMinus: { model.blocks[b].sets[s].reps = max(draft.reps - 1, 0) },
-                       onPlus: { model.blocks[b].sets[s].reps = draft.reps + 1 })
+                       onPlus: { model.blocks[b].sets[s].reps = draft.reps + 1 },
+                       onSet: { model.blocks[b].sets[s].reps = Int($0) })
         case .seconds:
             BigStepper(title: "Hold time", value: Fmt.clock(draft.seconds), unit: nil, footnote: last.map { "Last: \($0)" },
                        onMinus: { model.blocks[b].sets[s].seconds = max(draft.seconds - 5, 0) },
-                       onPlus: { model.blocks[b].sets[s].seconds = draft.seconds + 5 })
+                       onPlus: { model.blocks[b].sets[s].seconds = draft.seconds + 5 },
+                       onSet: { model.blocks[b].sets[s].seconds = Int($0) })
         case .minutes:
             BigStepper(title: "Minutes", value: "\(draft.seconds / 60)", unit: "min", footnote: last.map { "Last: \($0)" },
                        onMinus: { model.blocks[b].sets[s].seconds = max(draft.seconds - 60, 0) },
-                       onPlus: { model.blocks[b].sets[s].seconds = draft.seconds + 60 })
+                       onPlus: { model.blocks[b].sets[s].seconds = draft.seconds + 60 },
+                       onSet: { model.blocks[b].sets[s].seconds = Int($0) * 60 })
         }
     }
 
@@ -261,6 +266,11 @@ struct BigStepper: View {
     let footnote: String?
     let onMinus: () -> Void
     let onPlus: () -> Void
+    /// Called with a typed value when you tap the number and enter it.
+    var onSet: ((Double) -> Void)? = nil
+
+    @State private var typing = false
+    @State private var entry = ""
 
     var body: some View {
         VStack(spacing: 6) {
@@ -269,20 +279,44 @@ struct BigStepper: View {
                 .lineLimit(1).minimumScaleFactor(0.7)
             HStack(spacing: 4) {
                 button("minus", onMinus)
-                HStack(alignment: .firstTextBaseline, spacing: 2) {
-                    Text(value).font(.display(44)).foregroundStyle(Theme.textPrimary)
-                        .monospacedDigit().contentTransition(.numericText())
-                        .lineLimit(1).minimumScaleFactor(0.5)
-                    if let unit { Text(unit.uppercased()).font(.display(15)).foregroundStyle(Theme.textSecondary) }
+                Button {
+                    guard onSet != nil else { return }
+                    entry = ""
+                    typing = true
+                } label: {
+                    HStack(alignment: .firstTextBaseline, spacing: 2) {
+                        Text(value).font(.display(44)).foregroundStyle(Theme.textPrimary)
+                            .monospacedDigit().contentTransition(.numericText())
+                            .lineLimit(1).minimumScaleFactor(0.5)
+                        if let unit { Text(unit.uppercased()).font(.display(15)).foregroundStyle(Theme.textSecondary) }
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 52)
+                    .contentShape(Rectangle())
                 }
-                .frame(maxWidth: .infinity)
+                .buttonStyle(.plain)
+                .accessibilityHint(onSet != nil ? "Double-tap to type a value" : "")
                 button("plus", onPlus)
             }
             if let footnote {
                 Text(footnote).font(.caption2.weight(.semibold)).foregroundStyle(Theme.textFaint).lineLimit(1)
             }
+            if onSet != nil {
+                Text("TAP NUMBER TO TYPE").font(.system(size: 8, weight: .bold)).tracking(0.5).foregroundStyle(Theme.textFaint)
+            }
         }
         .cardStyle(padding: 10)
+        .alert(title, isPresented: $typing) {
+            TextField(value, text: $entry).keyboardType(.decimalPad)
+            Button("Set") {
+                if let v = Double(entry.replacingOccurrences(of: ",", with: ".")), v >= 0 {
+                    Haptics.tap()
+                    onSet?(v)
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text(unit.map { "Enter \($0)" } ?? "Enter a number")
+        }
     }
 
     private func button(_ icon: String, _ action: @escaping () -> Void) -> some View {
