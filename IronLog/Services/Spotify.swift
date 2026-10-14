@@ -18,8 +18,10 @@ final class Spotify {
     var message: String?
     var isConnected: Bool { refreshToken != nil }
 
-    /// From your free app at developer.spotify.com (entered in Settings).
-    var clientId: String { (UserDefaults.standard.string(forKey: "spotify.clientId") ?? "").trimmingCharacters(in: .whitespaces) }
+    /// The app's own Spotify ID — set once by the developer (developer.spotify.com → Create app,
+    /// redirect URI ironlog://spotify, Web API). Users never see it. Empty = Spotify option hidden.
+    static let clientId = ""
+    static var isAvailable: Bool { !clientId.isEmpty }
     private var refreshToken: String? = Keychain.get("spotify.refresh")
     @ObservationIgnored private var accessToken: String?
     @ObservationIgnored private var expiry = Date.distantPast
@@ -33,7 +35,7 @@ final class Spotify {
         let challenge = Data(SHA256.hash(data: Data(verifier.utf8))).base64URL
         var c = URLComponents(string: "https://accounts.spotify.com/authorize")
         c?.queryItems = [
-            .init(name: "client_id", value: clientId),
+            .init(name: "client_id", value: Self.clientId),
             .init(name: "response_type", value: "code"),
             .init(name: "redirect_uri", value: Self.redirect),
             .init(name: "code_challenge_method", value: "S256"),
@@ -135,7 +137,7 @@ final class Spotify {
         req.httpMethod = "POST"
         req.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         var form = URLComponents()
-        form.queryItems = (params.merging(["client_id": clientId]) { a, _ in a })
+        form.queryItems = (params.merging(["client_id": Self.clientId]) { a, _ in a })
             .map { URLQueryItem(name: $0.key, value: $0.value) }
         req.httpBody = form.percentEncodedQuery?.data(using: .utf8)
         guard let data = try? await URLSession.shared.data(for: req).0,

@@ -7,7 +7,6 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     @Environment(\.webAuthenticationSession) private var webAuth
-    @AppStorage("spotify.clientId") private var spotifyClientId = ""
     private var spotify = Spotify.shared
 
     @AppStorage(ProfileKey.heightCm) private var heightCm = ProfileDefault.heightCm
@@ -61,22 +60,20 @@ struct SettingsView: View {
                     numberRow("Daily water", value: $waterTarget, unit: "ml", step: 250)
                 } header: { header("Water") }
 
-                Section {
-                    if spotify.isConnected {
-                        Label("Connected", systemImage: "checkmark.circle.fill").foregroundStyle(Theme.accent)
-                        Button("Disconnect Spotify", role: .destructive) { spotify.disconnect() }
-                    } else {
-                        TextField("Spotify Client ID", text: $spotifyClientId)
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled()
-                        Button("Connect Spotify") { Task { await connectSpotify() } }
-                            .disabled(spotifyClientId.trimmingCharacters(in: .whitespaces).isEmpty)
+                if Spotify.isAvailable {
+                    Section {
+                        if spotify.isConnected {
+                            Label("Spotify connected", systemImage: "checkmark.circle.fill").foregroundStyle(Theme.accent)
+                            Button("Disconnect", role: .destructive) { spotify.disconnect() }
+                        } else {
+                            Button("Connect Spotify") { Task { await connectSpotify() } }
+                        }
+                        if let message = spotify.message {
+                            Text(message).font(.footnote).foregroundStyle(Theme.ember)
+                        }
+                    } header: { header("Music (optional)") } footer: {
+                        Text("Control your music from the workout screen. Needs Spotify Premium.")
                     }
-                    if let message = spotify.message {
-                        Text(message).font(.footnote).foregroundStyle(Theme.ember)
-                    }
-                } header: { header("Music (optional)") } footer: {
-                    Text("Shows a slim Spotify bar during workouts. Needs Spotify Premium and internet. Get a Client ID: developer.spotify.com → Dashboard → Create app, Redirect URI \(Spotify.redirect), tick Web API.")
                 }
 
                 Section {
