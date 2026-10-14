@@ -1,3 +1,4 @@
+import AuthenticationServices
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
@@ -5,12 +6,16 @@ import UniformTypeIdentifiers
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
+    @Environment(\.webAuthenticationSession) private var webAuth
+    @AppStorage("spotify.clientId") private var spotifyClientId = ""
+    private var spotify = Spotify.shared
 
     @AppStorage(ProfileKey.heightCm) private var heightCm = ProfileDefault.heightCm
     @AppStorage(ProfileKey.kcalTarget) private var kcalTarget = ProfileDefault.kcal
     @AppStorage(ProfileKey.proteinTarget) private var proteinTarget = ProfileDefault.protein
     @AppStorage(ProfileKey.carbsTarget) private var carbsTarget = ProfileDefault.carbs
     @AppStorage(ProfileKey.fatTarget) private var fatTarget = ProfileDefault.fat
+    @AppStorage(ProfileKey.fiberTarget) private var fiberTarget = ProfileDefault.fiber
     @AppStorage(ProfileKey.restSeconds) private var restSeconds = ProfileDefault.restSeconds
     @AppStorage(ProfileKey.healthSyncEnabled) private var healthSync = false
     @AppStorage(ProfileKey.waterTargetMl) private var waterTarget = ProfileDefault.waterTargetMl
@@ -39,6 +44,7 @@ struct SettingsView: View {
                     numberRow("Protein", value: $proteinTarget, unit: "g", step: 5)
                     numberRow("Carbs", value: $carbsTarget, unit: "g", step: 5)
                     numberRow("Fat", value: $fatTarget, unit: "g", step: 5)
+                    numberRow("Fibre", value: $fiberTarget, unit: "g", step: 5)
                 } header: { header("Daily targets") }
 
                 Section {
@@ -54,6 +60,24 @@ struct SettingsView: View {
                 Section {
                     numberRow("Daily water", value: $waterTarget, unit: "ml", step: 250)
                 } header: { header("Water") }
+
+                Section {
+                    if spotify.isConnected {
+                        Label("Connected", systemImage: "checkmark.circle.fill").foregroundStyle(Theme.accent)
+                        Button("Disconnect Spotify", role: .destructive) { spotify.disconnect() }
+                    } else {
+                        TextField("Spotify Client ID", text: $spotifyClientId)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
+                        Button("Connect Spotify") { Task { await connectSpotify() } }
+                            .disabled(spotifyClientId.trimmingCharacters(in: .whitespaces).isEmpty)
+                    }
+                    if let message = spotify.message {
+                        Text(message).font(.footnote).foregroundStyle(Theme.ember)
+                    }
+                } header: { header("Music (optional)") } footer: {
+                    Text("Shows a slim Spotify bar during workouts. Needs Spotify Premium and internet. Get a Client ID: developer.spotify.com → Dashboard → Create app, Redirect URI \(Spotify.redirect), tick Web API.")
+                }
 
                 Section {
                     Toggle("Connect Apple Health", isOn: $healthSync)
@@ -207,6 +231,13 @@ struct SettingsView: View {
                     .monospacedDigit()
             }
         }
+    }
+
+    private func connectSpotify() async {
+        guard let url = spotify.authorizeURL(),
+              let callback = try? await webAuth.authenticate(using: url, callbackURLScheme: "ironlog",
+                                                             preferredBrowserSession: .ephemeral) else { return }
+        await spotify.finishLogin(callback: callback)
     }
 
     private func connectHealth() async {
